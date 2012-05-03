@@ -1,0 +1,4 @@
+iconv -f iso-8859-1 -t utf-8 export_2010_en.xml > tmp.txt
+tidy -i -xml tmp.txt > tmp2.xml
+
+

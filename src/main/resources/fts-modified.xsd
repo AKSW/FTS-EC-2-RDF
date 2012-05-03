@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="year" type="xs:gYear"/>
+	<xs:element name="cofinancing_rate" type="xs:string"/>
+	<xs:element name="amount" type="xs:string"/>
+	<xs:element name="position_key" type="xs:string"/>
+	<xs:element name="grant_subject" type="xs:string" nillable="true"/>
+	<xs:element name="responsible_department" type="xs:string"/>
+	<xs:element name="budget_line" type="xs:string"/>
+	<xs:element name="programme" type="xs:string" nillable="true"/>
+	<xs:element name="name" type="xs:string"/>
+	<xs:element name="coordinator" type="xs:string"/>
+	<xs:element name="address" type="xs:string" nillable="true"/>
+	<xs:element name="city" type="xs:string" nillable="true"/>
+	<xs:element name="post_code" type="xs:string" nillable="true"/>
+	<xs:element name="country" type="xs:string"/>
+        <xs:element name="detail_amount" type="xs:string" nillable="true"/>
+        <xs:element name="geozone" type="xs:string" nillable="true"/>
+        <xs:element name="expense_type" type="xs:string" nillable="true"/>
+	<xs:element name="beneficiaries">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="beneficiary" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="beneficiary">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="name"/>
+				<xs:element ref="coordinator"/>
+				<xs:element ref="address"/>
+				<xs:element ref="city"/>
+				<xs:element ref="post_code"/>
+				<xs:element ref="country"/>
+                                <xs:element ref="detail_amount"/>
+                                <xs:element ref="geozone"/>
+                                <xs:element ref="expense_type"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="commitment">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="year"/>
+				<xs:element ref="beneficiaries"/>
+				<xs:element ref="cofinancing_rate"/>
+				<xs:element ref="amount"/>
+				<xs:element ref="position_key"/>
+				<xs:element ref="grant_subject"/>
+				<xs:element ref="responsible_department"/>
+				<xs:element ref="budget_line"/>
+				<xs:element ref="programme"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fts">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="commitment" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
