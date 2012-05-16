@@ -25,7 +25,7 @@ public class Vocab {
 
 	
 	public static final Property actionType = createProperty("actionType");
-	public static final Property address = createProperty("address");
+	public static final Property street = createProperty("street");
 	public static final Property amount = createProperty("amount");
 	public static final Property beneficiary = createProperty("beneficiary");
 	public static final Property budgetLine = createProperty("budgetLine");
@@ -43,9 +43,10 @@ public class Vocab {
 	public static final Property postCode = createProperty("postCode");
 	public static final Property programme = createProperty("programme");
 	public static final Property responsibleDepartment = createProperty("responsibleDepartment");
+	public static final Property subject = createProperty("subject");
 	public static final Property year = createProperty("year");
 	
-	public static final Property skosPrefLabel = createProperty("http://www.w3.org/2004/02/skos/core#prefLabel");
+	public static final Property skosPrefLabel = ResourceFactory.createProperty("http://www.w3.org/2004/02/skos/core#prefLabel");
 
 	
 	

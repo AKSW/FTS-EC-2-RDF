@@ -1,6 +1,10 @@
 package org.aksw.fts;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.openjena.atlas.lib.Sink;
@@ -52,15 +56,26 @@ class SinkModel
 public class FtsTest {
 	
 	@Test
-	public void test()
+	public void test1()
 		throws Exception
 	{
 		SinkModel sink = new SinkModel();
 		
-		File sourceFile = new File("src/test/resources/fts-excerpt-2009-en.xml");
+		File sourceFile = new File("src/test/resources/test1-fts-excerpt-2009-en.xml");
 		
 		Main.process(sourceFile, sink);
 		
-		sink.getModel().write(System.out, "TTL");
+		Model actual = sink.getModel(); 
+		actual.write(System.out, "TTL");		
+		
+		Model expected = ModelFactory.createDefaultModel();
+		InputStream in = new FileInputStream(new File("src/test/resources/test1-expected.ttl"));
+		try {
+			expected.read(in, "http://ex.org/", "TTL");
+		} finally {
+			in.close();
+		}
+		
+		//Assert.assertEquals(expected, actual);
 	}
 }

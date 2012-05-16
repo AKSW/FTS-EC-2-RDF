@@ -56,7 +56,7 @@ public class Main {
 	}
 
 	public static void emit(Sink<Triple> sink, Node s, Node p, Node o) {
-		if (o == null) {
+		if (s == null || p == null || o == null) {
 			return;
 		}
 
@@ -65,6 +65,10 @@ public class Main {
 
 	public static Node emit(Sink<Triple> sink, Node subject, Node property,
 			String prefix, String label) {
+		if(label == null || label.isEmpty()) {
+			return null;
+		}
+		
 		Node object = emitLabelledNode(sink, prefix, label);
 		if (object == null) {
 			return null;
@@ -126,6 +130,8 @@ public class Main {
 			Node commitmentNode = Node.createURI("http://fts.publicdata.eu/ct/"
 					+ commitment.getPositionKey());
 
+			emit(sink, commitmentNode, RDF.type.asNode(), Vocab.Commitment.asNode());
+			
 			// Node yearNode = Node.createURI("http://dbpedia.org/resource/"
 			// + commitment.getYear());
 
@@ -133,14 +139,19 @@ public class Main {
 					.getAmount()));
 			emit(sink, commitmentNode, Vocab.amount.asNode(), amountNode);
 
+			emit(sink, commitmentNode, RDFS.label.asNode(), Node.createLiteral("Commitment " + commitment.getPositionKey()));
+			
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
 					"http://fts.publicdata.eu/bl/", commitment.getBudgetLine());
 			emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(),
 					"http://fts.publicdata.eu/cfr",
 					commitment.getCofinancingRate());
-			emit(sink, commitmentNode, RDFS.comment.asNode(),
-					"http://fts.publicdata.eu/gs/",
-					commitment.getGrantSubject());
+			
+			
+			emit(sink, commitmentNode, Vocab.subject.asNode(),
+					ResourceFactory.createPlainLiteral(commitment.getGrantSubject()).asNode());
+			
+			
 			emit(sink, commitmentNode, Vocab.programme.asNode(),
 					"http://fts.publicdata.eu/pg/", commitment.getProgramme());
 			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(),
@@ -149,6 +160,14 @@ public class Main {
 			emit(sink, commitmentNode, Vocab.year.asNode(),
 					"http://dbpedia.org/resource/", commitment.getYear()
 							.toString());
+
+			// TODO Attach the expense type to the commitment
+			/*
+			emit(sink, commitmentNode, Vocab.expenseType.asNode(),
+					"http://fts.publicdata.eu/et/",
+					commitment.get());
+			*/
+
 
 			// http://fts.opendata.org/resource/cm/{position-key}/SI2.566788.1
 			for (Beneficiary beneficiary : commitment.getBeneficiaries()
@@ -172,6 +191,8 @@ public class Main {
 						.createURI("http://fts.publicdata.eu/be/"
 								+ StringUtils.urlEncode(primaryName + "-"
 										+ hashPart));
+
+				emit(sink, beneficiaryNode, RDF.type.asNode(), Vocab.Beneficiary.asNode());
 
 				/*
 				 * Link the beneficiary with the commitment
@@ -201,7 +222,7 @@ public class Main {
 				/*
 				 * Address
 				 */
-				emit(sink, beneficiaryNode, Vocab.address.asNode(),
+				emit(sink, beneficiaryNode, Vocab.street.asNode(),
 						Node.createLiteral(beneficiary.getAddress()));
 				emit(sink, beneficiaryNode, Vocab.postCode.asNode(),
 						Node.createLiteral(beneficiary.getPostCode()));
@@ -210,11 +231,11 @@ public class Main {
 				 * Spatial hierarchy (city, country)
 				 */
 				Node cityNode = emit(sink, beneficiaryNode,
-						Vocab.city.asNode(), "http://fts.publicdata.eu/city/",
+						Vocab.city.asNode(), "http://fts.publicdata.eu/resource/ci/",
 						beneficiary.getCity());
 				Node countryNode = emit(sink, beneficiaryNode,
 						Vocab.country.asNode(),
-						"http://ftc.publicdata.eu/country/",
+						"http://ftc.publicdata.eu/resource/cy/",
 						beneficiary.getCountry());
 
 				emit(sink, cityNode, RDF.type.asNode(),
@@ -227,7 +248,7 @@ public class Main {
 				/*
 				 * Detail Amount
 				 */
-				Node da = Node.createURI("http://fts.publicdata.eu/city/da/"
+				Node da = Node.createURI("http://fts.publicdata.eu/da/"
 						+ commitment.getPositionKey()
 						+ "-"
 						+ StringUtils.md5Hash(commitmentNode.toString()

@@ -1,0 +1,22 @@
+- Type relation fehlt: Commitment
+- address -> street ; street subproperty dbpedia street
+- Year: dbpedia
+- City -> Country -City
+
+
+
+- Akronyme bei Namen?
+
+
+
+Optional:
+- Countr-Postcode ware eindeutig sein
+
+
+Fuers paper
+CSV + XML probiert, Lessons learned, beispiel mit expense type einbringen.
+
+fuer url highlighting: hyperref
+
+fuers interlinking: die address strings bauen, und durch nominatim jagen
+detektion von name clashes: die meisten properties duerfen nur ein mal pro ressource vorkommen
