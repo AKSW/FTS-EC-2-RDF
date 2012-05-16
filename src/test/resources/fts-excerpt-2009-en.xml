@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<fts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ec.europa.eu/budget/fts/xsd/fts.xsd">
+
+	<commitment>
+
+		<year>2009</year>
+
+		<beneficiaries>
+
+			<beneficiary>
+				<name><![CDATA[BRENNER BASISTUNNEL EWIV*GEIE GALLERIA DI BASE DEL BRENNERO]]></name>
+				<coordinator>0</coordinator>
+				<address><![CDATA[GRABENWEG 3]]></address>
+				<city>INNSBRUCK</city>
+				<post_code>6020</post_code>
+				<country>Austria</country>
+
+				<geozone></geozone>
+
+				<expensetype>Operational</expensetype>
+			</beneficiary>
+
+			<beneficiary>
+				<name><![CDATA[REPUBBLICA ITALIANA* REPUBLIQUE ITALIENNE ITALIAN REPUBLIC]]></name>
+				<coordinator>0</coordinator>
+				<address><![CDATA[]]>
+				</address>
+				<city></city>
+				<post_code></post_code>
+				<country>Italy</country>
+
+				<geozone></geozone>
+
+				<expensetype>Operational</expensetype>
+			</beneficiary>
+
+		</beneficiaries>
+
+		<cofinancing_rate>27 %</cofinancing_rate>
+		<amount>41.132.618,40</amount>
+		<position_key>SI2.554191.1</position_key>
+		<grant_subject><![CDATA[PROJECT N&#xb0; 2007-EU-01180-P]]></grant_subject>
+		<responsible_department><![CDATA[Trans-European Transport Network Executive Agency]]></responsible_department>
+		<budget_line>Financial support for projects of common interest in the
+			trans-European transport network (06.03.03)</budget_line>
+		<actiontype>TEN-T: Trans-European Transport network </actiontype>
+
+	</commitment>
+</fts>
+
+
+
+
