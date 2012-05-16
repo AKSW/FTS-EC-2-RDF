@@ -7,3 +7,9 @@
 
 # Data files
 data
+
+.classpath
+.project
+.settings
+target
+
