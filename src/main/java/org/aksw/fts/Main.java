@@ -5,6 +5,8 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public class Main {
 				Vocab.COFINANCING_RATE_LUMP_SUM);
 		cofinancingRateTagToResource.put("Mixed financing",
 				Vocab.COFINANCING_RATE_MIXED);
-		cofinancingRateTagToResource.put("n/a", Vocab.COFINANCING_RATE_NA);
+		cofinancingRateTagToResource.put("N.A.", Vocab.COFINANCING_RATE_NA);
 
 		expenseTypeTagToResource.put("Operational",
 				Vocab.EXPENSE_TYPE_OPERATIONAL);
@@ -60,12 +62,6 @@ public class Main {
 
 	public static void processDir(File dir) throws Exception {
 		for (File file : dir.listFiles()) {
-			if (!(file.isFile() && file.getName().endsWith(".xml"))) {
-				continue;
-			}
-
-			// InputStream in = new FileInputStream(file);
-			System.out.println("Processing " + file.getAbsolutePath());
 			process(file);
 		}
 	}
@@ -151,13 +147,30 @@ public class Main {
 	}
 
 	public static void process(File file) throws Exception {
+		if (!(file.isFile() && file.getName().endsWith(".xml"))) {
+			return;
+		}
+
+		// InputStream in = new FileInputStream(file);
+		System.out.println("Processing " + file.getAbsolutePath());
+
 		Graph graph = GraphFactory.createDefaultGraph();
 		Sink<Triple> sink = new SinkTriplesToGraph(graph);
 
 		process(file, sink);
 
 		Model model = ModelFactory.createModelForGraph(graph);
-		model.write(System.out, "TURTLE");
+		
+		String sourcePath = file.getAbsolutePath();
+		String targetPath = sourcePath.substring(0, sourcePath.length() - 3) + "nt";
+		OutputStream out = new FileOutputStream(targetPath);
+		
+		try {
+			model.write(out, "N-TRIPLE");
+			out.flush();
+		} finally {
+			out.close();
+		}
 	}
 
 	public static String trim(String str) {
@@ -253,7 +266,10 @@ public class Main {
 			 */
 			String cfr = commitment.getCofinancingRate();
 			if (cfr != null) {
-				if (cfr.endsWith("%")) {
+				if(cfr.isEmpty()) {
+					// Skp
+				}
+				else if (cfr.endsWith("%")) {
 					BigDecimal rate = processAmount(cfr.substring(0,
 							cfr.length() - 1).trim());
 
@@ -263,7 +279,8 @@ public class Main {
 					emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(),
 							createTypedLiteralNode(rate));
 
-				} else {
+				} 
+				else {
 
 					Resource res = cofinancingRateTagToResource.get(cfr);
 					if (res != null) {
