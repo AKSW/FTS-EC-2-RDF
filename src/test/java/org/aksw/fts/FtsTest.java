@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.openjena.atlas.lib.Sink;
 
@@ -15,6 +13,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.util.ModelUtils;
 
+
+// TODO This class now exists in aksw-commons
 class SinkModel
 	implements Sink<Triple>
 {
@@ -34,15 +34,11 @@ class SinkModel
 	
 
 	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
+	public void close() {		
 	}
 
 	@Override
 	public void flush() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

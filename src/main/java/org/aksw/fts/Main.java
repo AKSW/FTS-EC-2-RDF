@@ -1,7 +1,14 @@
 package org.aksw.fts;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -14,18 +21,31 @@ import org.aksw.fts.vocab.SpatialHierarchy;
 import org.aksw.fts.vocab.Vocab;
 import org.openjena.atlas.lib.Sink;
 import org.openjena.riot.lang.SinkTriplesToGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Main {
+	private static Logger logger = LoggerFactory.getLogger(Main.class);
+	
+	private static Map<String, Resource> cofinancingRateTagToResource = new HashMap<String, Resource>();
+	
+	static {
+		cofinancingRateTagToResource.put("Lump sum", Vocab.COFINANCING_RATE_LUMP_SUM);
+		cofinancingRateTagToResource.put("Mixed financing", Vocab.COFINANCING_RATE_MIXED);
+		cofinancingRateTagToResource.put("n/a", Vocab.COFINANCING_RATE_NA);
+	}
+	
 	public static void main(String[] args) throws Exception {
 		processDir(new File("data/en"));
 	}
@@ -42,6 +62,23 @@ public class Main {
 		}
 	}
 
+	public static BigDecimal processCofinancingRate(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+
+		try {
+			if (value.endsWith("%")) {
+				return new BigDecimal(value.replace("%", "").trim());
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			logger.error("Error parsing: " + value);
+			return null;
+		}
+	}
+
 	public static BigDecimal processAmount(String value) {
 		if (value == null || value.isEmpty()) {
 			return null;
@@ -50,7 +87,7 @@ public class Main {
 		try {
 			return new BigDecimal(value.replace(".", "").replace(',', '.'));
 		} catch (Exception e) {
-			System.err.println("Error parsing: " + value);
+			logger.error("Error parsing: " + value);
 			return null;
 		}
 	}
@@ -65,10 +102,10 @@ public class Main {
 
 	public static Node emit(Sink<Triple> sink, Node subject, Node property,
 			String prefix, String label) {
-		if(label == null || label.isEmpty()) {
+		if (label == null || label.isEmpty()) {
 			return null;
 		}
-		
+
 		Node object = emitLabelledNode(sink, prefix, label);
 		if (object == null) {
 			return null;
@@ -110,13 +147,45 @@ public class Main {
 		Sink<Triple> sink = new SinkTriplesToGraph(graph);
 
 		process(file, sink);
-		
+
 		Model model = ModelFactory.createModelForGraph(graph);
 		model.write(System.out, "TURTLE");
 	}
-	
+
+	public static String trim(String str) {
+		return str == null ? null : str.trim();
+	}
+
+	/**
+	 * Iterates all getters of strings and sets a new trimmed string
+	 * 
+	 * 
+	 * @param o
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws IntrospectionException
+	 */
+	public static void trimStrings(Object o) throws IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException,
+			IntrospectionException {
+
+		BeanInfo info = Introspector.getBeanInfo(o.getClass());
+
+		for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+			if (String.class.equals(pd.getPropertyType())) {
+				if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+					continue;
+				}
+
+				String trimmed = trim((String) pd.getReadMethod().invoke(o));
+				pd.getWriteMethod().invoke(o, trimmed);
+			}
+		}
+	}
+
 	public static void process(File file, Sink<Triple> sink) throws Exception {
-	
+
 		JAXBContext context = JAXBContext.newInstance(Fts.class.getPackage()
 				.getName());
 
@@ -127,11 +196,14 @@ public class Main {
 
 		for (Commitment commitment : fts.getCommitment()) {
 
+			trimStrings(commitment);
+
 			Node commitmentNode = Node.createURI("http://fts.publicdata.eu/ct/"
 					+ commitment.getPositionKey());
 
-			emit(sink, commitmentNode, RDF.type.asNode(), Vocab.Commitment.asNode());
-			
+			emit(sink, commitmentNode, RDF.type.asNode(),
+					Vocab.Commitment.asNode());
+
 			// Node yearNode = Node.createURI("http://dbpedia.org/resource/"
 			// + commitment.getYear());
 
@@ -139,19 +211,21 @@ public class Main {
 					.getAmount()));
 			emit(sink, commitmentNode, Vocab.amount.asNode(), amountNode);
 
-			emit(sink, commitmentNode, RDFS.label.asNode(), Node.createLiteral("Commitment " + commitment.getPositionKey()));
-			
+			emit(sink,
+					commitmentNode,
+					RDFS.label.asNode(),
+					Node.createLiteral("Commitment "
+							+ commitment.getPositionKey()));
+
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
-					"http://fts.publicdata.eu/bl/", commitment.getBudgetLine());
-			emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(),
-					"http://fts.publicdata.eu/cfr",
-					commitment.getCofinancingRate());
-			
-			
-			emit(sink, commitmentNode, Vocab.subject.asNode(),
-					ResourceFactory.createPlainLiteral(commitment.getGrantSubject()).asNode());
-			
-			
+					Node.createLiteral(commitment.getBudgetLine()));
+
+			emit(sink, commitmentNode, Vocab.subject.asNode(), ResourceFactory
+					.createPlainLiteral(commitment.getGrantSubject()).asNode());
+
+			emit(sink, commitmentNode, Vocab.actionType.asNode(),
+					"http://fts.publicdata.eu/at/", commitment.getActiontype());
+
 			emit(sink, commitmentNode, Vocab.programme.asNode(),
 					"http://fts.publicdata.eu/pg/", commitment.getProgramme());
 			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(),
@@ -161,18 +235,42 @@ public class Main {
 					"http://dbpedia.org/resource/", commitment.getYear()
 							.toString());
 
+			/*
+			 * Cofinancing rate
+			 */
+			String cfr = commitment.getCofinancingRate();
+			if (cfr != null) {
+				if (cfr.endsWith("%")) {
+					BigDecimal rate = processAmount(cfr.substring(0,
+							cfr.length() - 1).trim());
+
+					emit(sink, commitmentNode, Vocab.cofinancingRateType.asNode(), Vocab.COFINANCING_RATE_EXPLICIT.asNode());
+					emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(), createTypedLiteralNode(rate));
+
+				} else {
+					
+					Resource res = cofinancingRateTagToResource.get(cfr);
+					if(res != null) {
+						emit(sink, commitmentNode, Vocab.cofinancingRateType.asNode(), res.asNode());
+					} else {
+						logger.error("Unknown cofinancing rate: " + cfr);
+					}
+					
+				}
+
+			}
+
 			// TODO Attach the expense type to the commitment
 			/*
-			emit(sink, commitmentNode, Vocab.expenseType.asNode(),
-					"http://fts.publicdata.eu/et/",
-					commitment.get());
-			*/
-
+			 * emit(sink, commitmentNode, Vocab.expenseType.asNode(),
+			 * "http://fts.publicdata.eu/et/", commitment.get());
+			 */
 
 			// http://fts.opendata.org/resource/cm/{position-key}/SI2.566788.1
 			for (Beneficiary beneficiary : commitment.getBeneficiaries()
 					.getBeneficiary()) {
 
+				trimStrings(beneficiary);
 				/*
 				 * Obtain all labels
 				 */
@@ -192,7 +290,8 @@ public class Main {
 								+ StringUtils.urlEncode(primaryName + "-"
 										+ hashPart));
 
-				emit(sink, beneficiaryNode, RDF.type.asNode(), Vocab.Beneficiary.asNode());
+				emit(sink, beneficiaryNode, RDF.type.asNode(),
+						Vocab.Beneficiary.asNode());
 
 				/*
 				 * Link the beneficiary with the commitment
@@ -222,16 +321,24 @@ public class Main {
 				/*
 				 * Address
 				 */
-				emit(sink, beneficiaryNode, Vocab.street.asNode(),
-						Node.createLiteral(beneficiary.getAddress()));
-				emit(sink, beneficiaryNode, Vocab.postCode.asNode(),
-						Node.createLiteral(beneficiary.getPostCode()));
+				if (!(beneficiary.getAddress() == null || beneficiary
+						.getAddress().isEmpty())) {
+					emit(sink, beneficiaryNode, Vocab.street.asNode(),
+							Node.createLiteral(beneficiary.getAddress()));
+				}
+
+				if (!(beneficiary.getPostCode() == null || beneficiary
+						.getPostCode().isEmpty())) {
+					emit(sink, beneficiaryNode, Vocab.postCode.asNode(),
+							Node.createLiteral(beneficiary.getPostCode()));
+				}
 
 				/*
 				 * Spatial hierarchy (city, country)
 				 */
 				Node cityNode = emit(sink, beneficiaryNode,
-						Vocab.city.asNode(), "http://fts.publicdata.eu/resource/ci/",
+						Vocab.city.asNode(),
+						"http://fts.publicdata.eu/resource/ci/",
 						beneficiary.getCity());
 				Node countryNode = emit(sink, beneficiaryNode,
 						Vocab.country.asNode(),
@@ -248,19 +355,22 @@ public class Main {
 				/*
 				 * Detail Amount
 				 */
-				Node da = Node.createURI("http://fts.publicdata.eu/da/"
-						+ commitment.getPositionKey()
-						+ "-"
-						+ StringUtils.md5Hash(commitmentNode.toString()
-								+ beneficiaryNode.toString()));
-				Node daValueNode = createTypedLiteralNode(processAmount(beneficiary
-						.getDetailAmount()));
+				String detailAmount = beneficiary.getDetailAmount() == null ? ""
+						: beneficiary.getDetailAmount().trim();
+				if (!detailAmount.isEmpty()) {
+					Node da = Node.createURI("http://fts.publicdata.eu/da/"
+							+ commitment.getPositionKey()
+							+ "-"
+							+ StringUtils.md5Hash(commitmentNode.toString()
+									+ beneficiaryNode.toString()));
+					Node daValueNode = createTypedLiteralNode(processAmount(detailAmount));
 
-				emit(sink, da, RDF.type.asNode(),
-						Vocab.AmountOfDistribution.asNode());
-				emit(sink, da, Vocab.commitment.asNode(), commitmentNode);
-				emit(sink, da, Vocab.beneficiary.asNode(), beneficiaryNode);
-				emit(sink, da, Vocab.amount.asNode(), daValueNode);
+					emit(sink, da, RDF.type.asNode(),
+							Vocab.AmountOfDistribution.asNode());
+					emit(sink, da, Vocab.commitment.asNode(), commitmentNode);
+					emit(sink, da, Vocab.beneficiary.asNode(), beneficiaryNode);
+					emit(sink, da, Vocab.amount.asNode(), daValueNode);
+				}
 			}
 		}
 
@@ -269,5 +379,4 @@ public class Main {
 		 * System.out.println(triple); }
 		 */
 	}
-
 }

@@ -25,9 +25,8 @@
 
 			<beneficiary>
 				<name><![CDATA[REPUBBLICA ITALIANA* REPUBLIQUE ITALIENNE ITALIAN REPUBLIC]]></name>
-				<coordinator>1</coordinator>
-				<address><![CDATA[]]>
-				</address>
+				<coordinator>0</coordinator>
+				<address><![CDATA[]]></address>
 				<city></city>
 				<post_code></post_code>
 				<country>Italy</country>
@@ -44,8 +43,7 @@
 		<position_key>SI2.554191.1</position_key>
 		<grant_subject><![CDATA[PROJECT N&#xb0; 2007-EU-01180-P]]></grant_subject>
 		<responsible_department><![CDATA[Trans-European Transport Network Executive Agency]]></responsible_department>
-		<budget_line>Financial support for projects of common interest in the
-			trans-European transport network (06.03.03)</budget_line>
+		<budget_line>Financial support for projects of common interest in the trans-European transport network (06.03.03)</budget_line>
 		<actiontype>TEN-T: Trans-European Transport network </actiontype>
 
 	</commitment>

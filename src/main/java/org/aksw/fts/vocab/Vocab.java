@@ -21,7 +21,10 @@ public class Vocab {
 	public static final Resource ExpenseType = createClass("ExpenseType");
 	public static final Resource Programme = createClass("Programme");
 
-	public static final Resource COFINANCING_RATE_FIXED = ResourceFactory.createResource(resourceNs + "cfr/fixed");
+	public static final Resource COFINANCING_RATE_EXPLICIT = ResourceFactory.createResource(resourceNs + "cr/explicit");
+	public static final Resource COFINANCING_RATE_MIXED = ResourceFactory.createResource(resourceNs + "cr/mixedFinancing");
+	public static final Resource COFINANCING_RATE_LUMP_SUM = ResourceFactory.createResource(resourceNs + "cr/lumpSum");
+	public static final Resource COFINANCING_RATE_NA = ResourceFactory.createResource(resourceNs + "cr/na");
 
 	
 	public static final Property actionType = createProperty("actionType");
