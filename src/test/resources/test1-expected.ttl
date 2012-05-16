@@ -2,102 +2,84 @@
       <http://www.w3.org/2000/01/rdf-schema#label>
               "2009" .
 
-<http://fts.publicdata.eu/be/BRENNER+BASISTUNNEL+EWIV-c2df7ed406f1cd20c50f4887727b4787>
+<http://fts.publicdata.eu/be/REPUBBLICA+ITALIANA-110a759cc1107670d03a7f39495668be>
+      a       <http://fts.publicdata.eu/ontology/Beneficiary> ;
       <http://www.w3.org/2000/01/rdf-schema#label>
-              "BRENNER BASISTUNNEL EWIV" , "GEIE GALLERIA DI BASE DEL BRENNERO" ;
-      <http://fts.publicdata.eu/ontology/address>
-              "GRABENWEG 3" ;
-      <http://fts.publicdata.eu/ontology/city>
-              <http://fts.publicdata.eu/city/INNSBRUCK> ;
+              "REPUBBLICA ITALIANA" ;
       <http://fts.publicdata.eu/ontology/country>
-              <http://ftc.publicdata.eu/country/Austria> ;
-      <http://fts.publicdata.eu/ontology/http://www.w3.org/2004/02/skos/core#prefLabel>
-              "BRENNER BASISTUNNEL EWIV" ;
-      <http://fts.publicdata.eu/ontology/postCode>
-              "6020" .
+              <http://ftc.publicdata.eu/resource/cy/Italy> ;
+      <http://www.w3.org/2004/02/skos/core#altLabel>
+              "REPUBLIQUE ITALIENNE ITALIAN REPUBLIC" ;
+      <http://www.w3.org/2004/02/skos/core#prefLabel>
+              "REPUBBLICA ITALIANA" .
 
-<http://fts.publicdata.eu/ct/SI2.554191.1>
-      <http://www.w3.org/2000/01/rdf-schema#comment>
-              <http://fts.publicdata.eu/gs/PROJECT+N%26%23xb0%3B+2007-EU-01180-P> ;
-      <http://fts.publicdata.eu/ontology/amount>
-              41132618.4 ;
-      <http://fts.publicdata.eu/ontology/beneficiary>
-              <http://fts.publicdata.eu/be/BRENNER+BASISTUNNEL+EWIV-c2df7ed406f1cd20c50f4887727b4787> , <http://fts.publicdata.eu/be/REPUBBLICA+ITALIANA-2bd6a9a8ee3526cf6803c3c5ea5f88f9> ;
-      <http://fts.publicdata.eu/ontology/budgetLine>
-              <http://fts.publicdata.eu/bl/Financial+support+for+projects+of+common+interest+in+the%0A%09%09%09trans-European+transport+network+%2806.03.03%29> ;
-      <http://fts.publicdata.eu/ontology/cofinancingRate>
-              <http://fts.publicdata.eu/cfr27+%25> ;
-      <http://fts.publicdata.eu/ontology/responsibleDepartment>
-              <http://fts.publicdata.eu/rd/Trans-European+Transport+Network+Executive+Agency> ;
-      <http://fts.publicdata.eu/ontology/year>
-              <http://dbpedia.org/resource/2009> .
-
-<http://ftc.publicdata.eu/country/Italy>
-      a       <http://ns.aksw.org/spatialHierarchy/Country> ;
-      <http://www.w3.org/2000/01/rdf-schema#label>
-              "Italy" .
-
-<http://fts.publicdata.eu/city/da/SI2.554191.1-8a62ba5d053b1c57b9489d0204a02bf4>
-      a       <http://fts.publicdata.eu/ontology/AmountOfDistribution> ;
-      <http://fts.publicdata.eu/ontology/beneficiary>
-              <http://fts.publicdata.eu/be/REPUBBLICA+ITALIANA-2bd6a9a8ee3526cf6803c3c5ea5f88f9> ;
-      <http://fts.publicdata.eu/ontology/commitment>
-              <http://fts.publicdata.eu/ct/SI2.554191.1> .
-
-<http://fts.publicdata.eu/cfr27+%25>
-      <http://www.w3.org/2000/01/rdf-schema#label>
-              "27 %" .
-
-<http://fts.publicdata.eu/gs/PROJECT+N%26%23xb0%3B+2007-EU-01180-P>
-      <http://www.w3.org/2000/01/rdf-schema#label>
-              "PROJECT N&#xb0; 2007-EU-01180-P" .
-
-<http://fts.publicdata.eu/bl/Financial+support+for+projects+of+common+interest+in+the%0A%09%09%09trans-European+transport+network+%2806.03.03%29>
-      <http://www.w3.org/2000/01/rdf-schema#label>
-              """Financial support for projects of common interest in the
-			trans-European transport network (06.03.03)""" .
-
-<http://fts.publicdata.eu/city/INNSBRUCK>
+<http://fts.publicdata.eu/resource/ci/INNSBRUCK-Austria>
       a       <http://ns.aksw.org/spatialHierarchy/City> ;
       <http://www.w3.org/2000/01/rdf-schema#label>
               "INNSBRUCK" ;
       <http://ns.aksw.org/spatialHierarchy/isLocatedIn>
-              <http://ftc.publicdata.eu/country/Austria> .
+              <http://ftc.publicdata.eu/resource/cy/Austria> .
 
-<http://fts.publicdata.eu/be/REPUBBLICA+ITALIANA-2bd6a9a8ee3526cf6803c3c5ea5f88f9>
+<http://fts.publicdata.eu/be/BRENNER+BASISTUNNEL+EWIV-c2df7ed406f1cd20c50f4887727b4787>
+      a       <http://fts.publicdata.eu/ontology/Beneficiary> ;
       <http://www.w3.org/2000/01/rdf-schema#label>
-              "REPUBLIQUE ITALIENNE ITALIAN REPUBLIC" , "REPUBBLICA ITALIANA" ;
-      <http://fts.publicdata.eu/ontology/address>
-              """
-				""" ;
+              "BRENNER BASISTUNNEL EWIV" ;
       <http://fts.publicdata.eu/ontology/city>
-              <http://fts.publicdata.eu/city/> ;
+              <http://fts.publicdata.eu/resource/ci/INNSBRUCK-Austria> ;
       <http://fts.publicdata.eu/ontology/country>
-              <http://ftc.publicdata.eu/country/Italy> ;
-      <http://fts.publicdata.eu/ontology/http://www.w3.org/2004/02/skos/core#prefLabel>
-              "REPUBBLICA ITALIANA" ;
+              <http://ftc.publicdata.eu/resource/cy/Austria> ;
       <http://fts.publicdata.eu/ontology/postCode>
-              "" .
+              "6020" ;
+      <http://fts.publicdata.eu/ontology/street>
+              "GRABENWEG 3" ;
+      <http://www.w3.org/2004/02/skos/core#altLabel>
+              "GEIE GALLERIA DI BASE DEL BRENNERO" ;
+      <http://www.w3.org/2004/02/skos/core#prefLabel>
+              "BRENNER BASISTUNNEL EWIV" .
 
-<http://fts.publicdata.eu/city/da/SI2.554191.1-2a858d82a479c317c4a2289278276f71>
-      a       <http://fts.publicdata.eu/ontology/AmountOfDistribution> ;
+<http://fts.publicdata.eu/ct/SI2.554191.1>
+      a       <http://fts.publicdata.eu/ontology/Commitment> ;
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "Commitment SI2.554191.1" ;
+      <http://fts.publicdata.eu/ontology/actionType>
+              <http://fts.publicdata.eu/at/TEN-T%3A+Trans-European+Transport+network> ;
+      <http://fts.publicdata.eu/ontology/amount>
+              41132618.4 ;
       <http://fts.publicdata.eu/ontology/beneficiary>
-              <http://fts.publicdata.eu/be/BRENNER+BASISTUNNEL+EWIV-c2df7ed406f1cd20c50f4887727b4787> ;
-      <http://fts.publicdata.eu/ontology/commitment>
-              <http://fts.publicdata.eu/ct/SI2.554191.1> .
+              <http://fts.publicdata.eu/be/REPUBBLICA+ITALIANA-110a759cc1107670d03a7f39495668be> , <http://fts.publicdata.eu/be/BRENNER+BASISTUNNEL+EWIV-c2df7ed406f1cd20c50f4887727b4787> ;
+      <http://fts.publicdata.eu/ontology/budgetLine>
+              "Financial support for projects of common interest in the trans-European transport network (06.03.03)" ;
+      <http://fts.publicdata.eu/ontology/cofinancingRate>
+              "27"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+      <http://fts.publicdata.eu/ontology/cofinancingRateType>
+              <http://fts.publicdata.eu/resource/cr/explicit> ;
+      <http://fts.publicdata.eu/ontology/expenseType>
+              <http://fts.publicdata.eu/et/Operational> ;
+      <http://fts.publicdata.eu/ontology/responsibleDepartment>
+              <http://fts.publicdata.eu/rd/Trans-European+Transport+Network+Executive+Agency> ;
+      <http://fts.publicdata.eu/ontology/subject>
+              "PROJECT N&#xb0; 2007-EU-01180-P" ;
+      <http://fts.publicdata.eu/ontology/year>
+              <http://dbpedia.org/resource/2009> .
+
+<http://fts.publicdata.eu/at/TEN-T%3A+Trans-European+Transport+network>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "TEN-T: Trans-European Transport network" .
 
 <http://fts.publicdata.eu/rd/Trans-European+Transport+Network+Executive+Agency>
       <http://www.w3.org/2000/01/rdf-schema#label>
               "Trans-European Transport Network Executive Agency" .
 
-<http://ftc.publicdata.eu/country/Austria>
+<http://ftc.publicdata.eu/resource/cy/Italy>
+      a       <http://ns.aksw.org/spatialHierarchy/Country> ;
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "Italy" .
+
+<http://fts.publicdata.eu/et/Operational>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "Operational" .
+
+<http://ftc.publicdata.eu/resource/cy/Austria>
       a       <http://ns.aksw.org/spatialHierarchy/Country> ;
       <http://www.w3.org/2000/01/rdf-schema#label>
               "Austria" .
-
-<http://fts.publicdata.eu/city/>
-      a       <http://ns.aksw.org/spatialHierarchy/City> ;
-      <http://www.w3.org/2000/01/rdf-schema#label>
-              "" ;
-      <http://ns.aksw.org/spatialHierarchy/isLocatedIn>
-              <http://ftc.publicdata.eu/country/Italy> .

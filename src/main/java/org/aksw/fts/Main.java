@@ -37,15 +37,23 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Main {
 	private static Logger logger = LoggerFactory.getLogger(Main.class);
-	
+
 	private static Map<String, Resource> cofinancingRateTagToResource = new HashMap<String, Resource>();
-	
+	private static Map<String, Resource> expenseTypeTagToResource = new HashMap<String, Resource>();
+
 	static {
-		cofinancingRateTagToResource.put("Lump sum", Vocab.COFINANCING_RATE_LUMP_SUM);
-		cofinancingRateTagToResource.put("Mixed financing", Vocab.COFINANCING_RATE_MIXED);
+		cofinancingRateTagToResource.put("Lump sum",
+				Vocab.COFINANCING_RATE_LUMP_SUM);
+		cofinancingRateTagToResource.put("Mixed financing",
+				Vocab.COFINANCING_RATE_MIXED);
 		cofinancingRateTagToResource.put("n/a", Vocab.COFINANCING_RATE_NA);
+
+		expenseTypeTagToResource.put("Operational",
+				Vocab.EXPENSE_TYPE_OPERATIONAL);
+		expenseTypeTagToResource.put("Administrative",
+				Vocab.EXPENSE_TYPE_ADMINISTRATIVE);
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		processDir(new File("data/en"));
 	}
@@ -220,8 +228,13 @@ public class Main {
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
 					Node.createLiteral(commitment.getBudgetLine()));
 
-			emit(sink, commitmentNode, Vocab.subject.asNode(), ResourceFactory
-					.createPlainLiteral(commitment.getGrantSubject()).asNode());
+			if (!commitment.getGrantSubject().isEmpty()) {
+				emit(sink,
+						commitmentNode,
+						Vocab.subject.asNode(),
+						ResourceFactory.createPlainLiteral(
+								commitment.getGrantSubject()).asNode());
+			}
 
 			emit(sink, commitmentNode, Vocab.actionType.asNode(),
 					"http://fts.publicdata.eu/at/", commitment.getActiontype());
@@ -244,18 +257,23 @@ public class Main {
 					BigDecimal rate = processAmount(cfr.substring(0,
 							cfr.length() - 1).trim());
 
-					emit(sink, commitmentNode, Vocab.cofinancingRateType.asNode(), Vocab.COFINANCING_RATE_EXPLICIT.asNode());
-					emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(), createTypedLiteralNode(rate));
+					emit(sink, commitmentNode,
+							Vocab.cofinancingRateType.asNode(),
+							Vocab.COFINANCING_RATE_EXPLICIT.asNode());
+					emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(),
+							createTypedLiteralNode(rate));
 
 				} else {
-					
+
 					Resource res = cofinancingRateTagToResource.get(cfr);
-					if(res != null) {
-						emit(sink, commitmentNode, Vocab.cofinancingRateType.asNode(), res.asNode());
+					if (res != null) {
+						emit(sink, commitmentNode,
+								Vocab.cofinancingRateType.asNode(),
+								res.asNode());
 					} else {
 						logger.error("Unknown cofinancing rate: " + cfr);
 					}
-					
+
 				}
 
 			}
@@ -267,10 +285,22 @@ public class Main {
 			 */
 
 			// http://fts.opendata.org/resource/cm/{position-key}/SI2.566788.1
+			String expenseType = null;
 			for (Beneficiary beneficiary : commitment.getBeneficiaries()
 					.getBeneficiary()) {
 
 				trimStrings(beneficiary);
+
+				/*
+				 * Expense type
+				 */
+				if (expenseType == null) {
+					expenseType = beneficiary.getExpensetype();
+				} else if (!expenseType.equals(beneficiary.getExpensetype())) {
+					logger.error("Different expense types within same commitment: "
+							+ expenseType + ", " + beneficiary.getExpensetype());
+				}
+
 				/*
 				 * Obtain all labels
 				 */
@@ -300,15 +330,41 @@ public class Main {
 						beneficiaryNode);
 
 				/*
-				 * All of a beneficiary's names become rdfs:labels; the primary
-				 * name additionally becomes skos:prefLabel
+				 * The first name of a beneficiary becomes a rdf:label and a
+				 * skos:pref label. The remaining labels became skos:alt labels
+				 * 
+				 * Below is deprecated. All of a beneficiary's names become
+				 * rdfs:labels; the primary name additionally becomes
+				 * skos:prefLabel
 				 */
-				for (String name : names) {
-					emit(sink, beneficiaryNode, RDFS.label.asNode(),
-							ResourceFactory.createPlainLiteral(name).asNode());
+
+				for (int i = 0; i < names.length; ++i) {
+					String name = names[i];
+					Node nameNode = ResourceFactory.createPlainLiteral(name)
+							.asNode();
+
+					if (i == 0) {
+						emit(sink, beneficiaryNode, RDFS.label.asNode(),
+								nameNode);
+						emit(sink, beneficiaryNode,
+								Vocab.skosPrefLabel.asNode(), nameNode);
+					} else {
+						emit(sink, beneficiaryNode,
+								Vocab.skosAltLabel.asNode(), nameNode);
+					}
 				}
-				emit(sink, beneficiaryNode, Vocab.skosPrefLabel.asNode(),
-						ResourceFactory.createPlainLiteral(names[0]).asNode());
+
+				if (expenseType != null) {
+					emit(sink, commitmentNode, Vocab.expenseType.asNode(),
+							"http://fts.publicdata.eu/et/", expenseType);
+				}
+
+				// for (String name : names) {
+				// emit(sink, beneficiaryNode, RDFS.label.asNode(),
+				// ResourceFactory.createPlainLiteral(name).asNode());
+				// }
+				// emit(sink, beneficiaryNode, Vocab.skosPrefLabel.asNode(),
+				// ResourceFactory.createPlainLiteral(names[0]).asNode());
 
 				/*
 				 * Coordinator role
@@ -336,21 +392,36 @@ public class Main {
 				/*
 				 * Spatial hierarchy (city, country)
 				 */
-				Node cityNode = emit(sink, beneficiaryNode,
-						Vocab.city.asNode(),
-						"http://fts.publicdata.eu/resource/ci/",
-						beneficiary.getCity());
+				Node cityNode = null;
+				if (!(beneficiary.getCity() == null || beneficiary.getCity()
+						.isEmpty())) {
+
+					String cityStr = beneficiary.getCity() + "-"
+							+ beneficiary.getCountry();
+					cityNode = Node
+							.createURI("http://fts.publicdata.eu/resource/ci/"
+									+ cityStr);
+
+					emit(sink, beneficiaryNode, Vocab.city.asNode(), cityNode);
+
+					emit(sink, cityNode, RDF.type.asNode(),
+							SpatialHierarchy.City.asNode());
+					emit(sink, cityNode, RDFS.label.asNode(),
+							Node.createLiteral(beneficiary.getCity()));
+				}
+
 				Node countryNode = emit(sink, beneficiaryNode,
 						Vocab.country.asNode(),
 						"http://ftc.publicdata.eu/resource/cy/",
 						beneficiary.getCountry());
 
-				emit(sink, cityNode, RDF.type.asNode(),
-						SpatialHierarchy.City.asNode());
 				emit(sink, countryNode, RDF.type.asNode(),
 						SpatialHierarchy.Country.asNode());
-				emit(sink, cityNode, SpatialHierarchy.isLocatedIn.asNode(),
-						countryNode);
+
+				if (cityNode != null) {
+					emit(sink, cityNode, SpatialHierarchy.isLocatedIn.asNode(),
+							countryNode);
+				}
 
 				/*
 				 * Detail Amount

@@ -4,50 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import org.aksw.commons.jena.util.SinkModel;
+import org.junit.Assert;
 import org.junit.Test;
-import org.openjena.atlas.lib.Sink;
 
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.sparql.util.ModelUtils;
 
-
-// TODO This class now exists in aksw-commons
-class SinkModel
-	implements Sink<Triple>
-{
-	private Model model;
-	
-	public SinkModel() {
-		this.model = ModelFactory.createDefaultModel();
-	}
-	
-	public SinkModel(Model model) {
-		this.model = model;
-	}
-	
-	public Model getModel() {
-		return model;
-	}
-	
-
-	@Override
-	public void close() {		
-	}
-
-	@Override
-	public void flush() {
-	}
-
-	@Override
-	public void send(Triple triple) {
-		Statement stmt = ModelUtils.tripleToStatement(model, triple);
-		model.add(stmt);		
-	}
-	
-}
 
 public class FtsTest {
 	
@@ -62,7 +25,7 @@ public class FtsTest {
 		Main.process(sourceFile, sink);
 		
 		Model actual = sink.getModel(); 
-		actual.write(System.out, "TTL");		
+		//actual.write(System.out, "TTL");		
 		
 		Model expected = ModelFactory.createDefaultModel();
 		InputStream in = new FileInputStream(new File("src/test/resources/test1-expected.ttl"));
@@ -71,7 +34,7 @@ public class FtsTest {
 		} finally {
 			in.close();
 		}
-		
-		//Assert.assertEquals(expected, actual);
+
+		Assert.assertTrue("Isomorphy of expected and actual model", expected.isIsomorphicWith(actual));
 	}
 }

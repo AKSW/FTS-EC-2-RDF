@@ -26,6 +26,9 @@ public class Vocab {
 	public static final Resource COFINANCING_RATE_LUMP_SUM = ResourceFactory.createResource(resourceNs + "cr/lumpSum");
 	public static final Resource COFINANCING_RATE_NA = ResourceFactory.createResource(resourceNs + "cr/na");
 
+	public static final Resource EXPENSE_TYPE_OPERATIONAL = ResourceFactory.createResource(resourceNs + "et/operational");
+	public static final Resource EXPENSE_TYPE_ADMINISTRATIVE = ResourceFactory.createResource(resourceNs + "et/administrative");
+
 	
 	public static final Property actionType = createProperty("actionType");
 	public static final Property street = createProperty("street");
@@ -50,6 +53,7 @@ public class Vocab {
 	public static final Property year = createProperty("year");
 	
 	public static final Property skosPrefLabel = ResourceFactory.createProperty("http://www.w3.org/2004/02/skos/core#prefLabel");
+	public static final Property skosAltLabel = ResourceFactory.createProperty("http://www.w3.org/2004/02/skos/core#altLabel");
 
 	
 	
