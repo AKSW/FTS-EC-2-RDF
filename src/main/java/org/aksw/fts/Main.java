@@ -1,6 +1,8 @@
 package org.aksw.fts;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 
 import javax.xml.bind.JAXBContext;
@@ -14,12 +16,13 @@ import org.aksw.fts.vocab.SpatialHierarchy;
 import org.aksw.fts.vocab.Vocab;
 import org.openjena.atlas.lib.Sink;
 import org.openjena.riot.lang.SinkTriplesToGraph;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -45,7 +48,21 @@ public class Main {
 			
 			//InputStream in = new FileInputStream(file);
 			System.out.println("Processing " + file.getAbsolutePath());
-			process(file);
+			
+			Graph graph = GraphFactory.createDefaultGraph();
+			Sink<Triple> sink = new SinkTriplesToGraph(graph);
+
+			process(file, sink);
+
+			File outFile = new File(file.getName() + ".nt");
+			OutputStream os = new FileOutputStream(outFile);
+			
+			try {
+				Model model = ModelFactory.createModelForGraph(graph);
+				model.write(os, "N-TRIPLE");
+			} finally {
+				os.close();
+			}
 		}
 	}
 	
@@ -55,7 +72,7 @@ public class Main {
 		}
 		
 		try {
-			return new BigDecimal(value.replace(".", "").replace(',', '.'));
+			return new BigDecimal(value.replace(".", "").replace(',', '.').trim());
 		} catch(Exception e) {
 			System.err.println("Error parsing: " + value);
 			return null;
@@ -70,10 +87,14 @@ public class Main {
 		sink.send(new Triple(s, p, o));
 	}
 	
-	public static Node emit(Sink<Triple> sink, Node subject, Node property, String prefix, String label) {
+	public static Node emit(Sink<Triple> sink, Node subject, Node property, Node clazz, String prefix, String label) {
 		Node object = emitLabelledNode(sink, prefix, label);
 		if(object == null) {
 			return null;
+		}
+		
+		if(clazz != null) {
+			sink.send(new Triple(object, RDF.type.asNode(), clazz));
 		}
 		
 		sink.send(new Triple(subject, property, object));
@@ -103,14 +124,25 @@ public class Main {
 		
 		return result;
 	}
+	
+	public static void emitCofinancingRate(Sink<Triple> sink, Node subjectNode, String str) {
+		str = str.trim();
+		if(str.endsWith("%")) {
+			str = str.substring(0, str.length() - 1);
+			BigDecimal value = processAmount(str);
+
+			emit(sink, subjectNode, Vocab.cofinancingRateType.asNode(), Vocab.COFINANCING_RATE_FIXED.asNode());
+			emit(sink, Vocab.COFINANCING_RATE_FIXED.asNode(), RDF.type.asNode(), Vocab.CofinancingRateType.asNode());
+			emit(sink, subjectNode, Vocab.cofinancingRate.asNode(), createTypedLiteralNode(value));
+		} else {
+			emit(sink, subjectNode, Vocab.cofinancingRateType.asNode(), Vocab.CofinancingRateType.asNode(), "http://fts.publicdata.eu/cfr", str);
+		}
+	}
 
 		
-	public static void process(File file)
+	public static void process(File file, Sink<Triple> sink)
 			throws Exception
-	{
-		Graph graph = GraphFactory.createDefaultGraph();
-		Sink<Triple> sink = new SinkTriplesToGraph(graph);
-		
+	{		
 		JAXBContext context = JAXBContext.newInstance(Fts.class.getPackage().getName());
 
 		Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -127,12 +159,20 @@ public class Main {
 			Node amountNode = createTypedLiteralNode(processAmount(commitment.getAmount()));
 			emit(sink, commitmentNode, Vocab.amount.asNode(), amountNode);
 			
-			emit(sink, commitmentNode, Vocab.budgetLine.asNode(), "http://fts.publicdata.eu/bl/", commitment.getBudgetLine());
-			emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(), "http://fts.publicdata.eu/cfr", commitment.getCofinancingRate());
-			emit(sink, commitmentNode, RDFS.comment.asNode(), "http://fts.publicdata.eu/gs/", commitment.getGrantSubject());
-			emit(sink, commitmentNode, Vocab.programme.asNode(), "http://fts.publicdata.eu/pg/", commitment.getProgramme());
-			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(), "http://fts.publicdata.eu/rd/", commitment.getResponsibleDepartment());
-			emit(sink, commitmentNode, Vocab.year.asNode(), "http://dbpedia.org/resource/", commitment.getYear().toString());
+			emit(sink, commitmentNode, Vocab.budgetLine.asNode(), Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/bl/", commitment.getBudgetLine());
+			//emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(), Vocab.CofinancingRate.asNode(), "http://fts.publicdata.eu/cfr", commitment.getCofinancingRate());
+			emit(sink, commitmentNode, RDFS.comment.asNode(), Node.createLiteral(commitment.getGrantSubject()));
+			emit(sink, commitmentNode, Vocab.programme.asNode(), Vocab.Programme.asNode(), "http://fts.publicdata.eu/pg/", commitment.getProgramme());
+			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(), Vocab.Department.asNode(), "http://fts.publicdata.eu/rd/", commitment.getResponsibleDepartment());
+			emit(sink, commitmentNode, Vocab.year.asNode(), Vocab.Year.asNode(), "http://dbpedia.org/resource/", commitment.getYear().toString());
+
+			
+			/*
+			 * Cofinancing rate 
+			 */
+			emitCofinancingRate(sink, commitmentNode, commitment.getCofinancingRate());
+			
+			
 			
 			// http://fts.opendata.org/resource/cm/{position-key}/SI2.566788.1
 			for(Beneficiary beneficiary : commitment.getBeneficiaries().getBeneficiary()) {
@@ -184,13 +224,13 @@ public class Main {
 				/*
 				 * Spatial hierarchy (city, country)
 				 */
-				Node cityNode = emit(sink, beneficiaryNode, Vocab.city.asNode(), "http://fts.publicdata.eu/city/", beneficiary.getCity());
-				Node countryNode = emit(sink, beneficiaryNode, Vocab.country.asNode(), "http://ftc.publicdata.eu/country/", beneficiary.getCountry());
+				Node cityNode = emit(sink, beneficiaryNode, Vocab.city.asNode(), SpatialHierarchy.City.asNode(), "http://fts.publicdata.eu/city/", beneficiary.getCity());
+				Node countryNode = emit(sink, beneficiaryNode, Vocab.country.asNode(), SpatialHierarchy.Country.asNode(), "http://ftc.publicdata.eu/country/", beneficiary.getCountry());
 
 				emit(sink, cityNode, RDF.type.asNode(), SpatialHierarchy.City.asNode());
 				emit(sink, countryNode, RDF.type.asNode(), SpatialHierarchy.Country.asNode());
 				emit(sink, cityNode, SpatialHierarchy.isLocatedIn.asNode(), countryNode);
-
+				
 				
 				/*
 				 *  Detail Amount
@@ -201,13 +241,11 @@ public class Main {
 				emit(sink, da, RDF.type.asNode(), Vocab.AmountOfDistribution.asNode());
 				emit(sink, da, Vocab.commitment.asNode(), commitmentNode);
 				emit(sink, da, Vocab.beneficiary.asNode(), beneficiaryNode);
-				emit(sink, da, Vocab.amount.asNode(), daValueNode);
-			}
+				emit(sink, da, Vocab.detailAmount.asNode(), daValueNode);
+				
+				emit(sink, da, RDFS.label.asNode(), Node.createLiteral("Distributed amount of commitment " + commitment.getPositionKey() + " to beneficiary " + primaryName));
+			}			
 		}
-		
-		
-		Model model = ModelFactory.createModelForGraph(graph);
-		model.write(System.out, "TURTLE");
 		
 		/*
 		for(Triple triple : graph.find(null,  null, null).toList()) {
