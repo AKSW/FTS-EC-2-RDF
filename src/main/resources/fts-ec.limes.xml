@@ -29,9 +29,9 @@
 
 	<SOURCE>
 		<ID>Financial Transparancy System</ID>
-		<ENDPOINT>http://db0.aksw.org:8850/sparql</ENDPOINT>
-                <!-- <ENDPOINT>http://localhost/sparql</ENDPOINT> -->
-		<GRAPH>http://fintrans.publicdata.eu/ec/</GRAPH>
+		<!-- <ENDPOINT>http://db0.aksw.org:8850/sparql</ENDPOINT> -->
+                <ENDPOINT>http://localhost/fts/sparql</ENDPOINT>
+		<!-- <GRAPH>http://fintrans.publicdata.eu/ec/</GRAPH> -->
 		<VAR>?x</VAR>
 		<PAGESIZE>1000</PAGESIZE>
 		<RESTRICTION>?x rdf:type sh:City</RESTRICTION>		
@@ -40,6 +40,7 @@
 	<TARGET>
 		<ID>LinkedGeoData</ID>
 		<ENDPOINT>http://live.linkedgeodata.org/sparql</ENDPOINT>
+		<!--<ENDPOINT>http://test.linkedgeodata.org/sparql</ENDPOINT>-->
 		<GRAPH>http://linkedgeodata.org</GRAPH>		
 		<VAR>?y</VAR>
 		<PAGESIZE>1000</PAGESIZE>
@@ -49,12 +50,12 @@
 	<METRIC>trigrams(x.rdfs:label, y.rdfs:label)|0.9</METRIC>	
 	<ACCEPTANCE>
 		<THRESHOLD>0.9</THRESHOLD>
-		<FILE>interlinks/financial_transparancy_system-linkedgeodata/links.nt</FILE>
+		<FILE>interlinks/fts-lgd/links.nt</FILE>
 		<RELATION>owl:sameAs</RELATION>
 	</ACCEPTANCE>
 	<REVIEW>
 		<THRESHOLD>0.9</THRESHOLD>
-		<FILE>interlinks/financial_transparancy_system-linkedgeodata/review.nt</FILE>
+		<FILE>interlinks/fts-lgd/review.nt</FILE>
 		<RELATION>owl:sameAs</RELATION>
 	</REVIEW>
 		<EXECUTION>Simple</EXECUTION>

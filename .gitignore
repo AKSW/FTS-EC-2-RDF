@@ -14,3 +14,7 @@ data
 target
 
 export*
+
+src/main/resources/fts-ec.limes.log
+cache
+

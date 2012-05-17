@@ -1,0 +1,6 @@
+Select ("2007" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2007> { ?s a ?t . } Order By ?y ?t
+Select ("2008" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2008> { ?s a ?t . } Order By ?y ?t
+Select ("2009" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2009> { ?s a ?t . } Order By ?y ?t
+Select ("2010" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010> { ?s a ?t . } Order By ?y ?t
+Select ("2010-fedf" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010-fedf> { ?s a ?t . } Order By ?y ?t
+

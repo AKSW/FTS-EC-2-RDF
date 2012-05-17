@@ -156,7 +156,7 @@ public class Main {
 
 		Graph graph = GraphFactory.createDefaultGraph();
 		Sink<Triple> sink = new SinkTriplesToGraph(graph);
-
+		
 		process(file, sink);
 
 		Model model = ModelFactory.createModelForGraph(graph);
@@ -413,8 +413,8 @@ public class Main {
 				if (!(beneficiary.getCity() == null || beneficiary.getCity()
 						.isEmpty())) {
 
-					String cityStr = beneficiary.getCity() + "-"
-							+ beneficiary.getCountry();
+					String cityStr = StringUtils.urlEncode(beneficiary.getCity()) + "-"
+							+ StringUtils.urlEncode(beneficiary.getCountry());
 					cityNode = Node
 							.createURI("http://fts.publicdata.eu/resource/ci/"
 									+ cityStr);
@@ -429,7 +429,7 @@ public class Main {
 
 				Node countryNode = emit(sink, beneficiaryNode,
 						Vocab.country.asNode(),
-						"http://ftc.publicdata.eu/resource/cy/",
+						"http://fts.publicdata.eu/resource/cy/",
 						beneficiary.getCountry());
 
 				emit(sink, countryNode, RDF.type.asNode(),
