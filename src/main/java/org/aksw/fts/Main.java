@@ -45,7 +45,7 @@ public class Main {
 
 	static {
 		cofinancingRateTagToResource.put("Lump sum",
-				Vocab.COFINANCING_RATE_LUMP_SUM);
+				Vocab.COFINANCING_RATE_LUMP_SUM_OR_FLAT);
 		cofinancingRateTagToResource.put("Mixed financing",
 				Vocab.COFINANCING_RATE_MIXED);
 		cofinancingRateTagToResource.put("N.A.", Vocab.COFINANCING_RATE_NA);
@@ -240,7 +240,7 @@ public class Main {
 
 			Node amountNode = createTypedLiteralNode(processAmount(commitment
 					.getAmount()));
-			emit(sink, commitmentNode, Vocab.amount.asNode(), amountNode);
+			emit(sink, commitmentNode, Vocab.totalAmount.asNode(), amountNode);
 
 			emit(sink,
 					commitmentNode,
@@ -254,7 +254,7 @@ public class Main {
 			 */
 
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
-					Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/bl",
+					Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/bl/",
 					commitment.getBudgetLine());
 
 			if (!commitment.getGrantSubject().isEmpty()) {
@@ -292,9 +292,11 @@ public class Main {
 					emit(sink, commitmentNode,
 							Vocab.cofinancingRateType.asNode(),
 							Vocab.COFINANCING_RATE_EXPLICIT.asNode());
-					
-					emit(sink, Vocab.COFINANCING_RATE_EXPLICIT.asNode(), RDF.type.asNode(), Vocab.CofinancingRateType.asNode());
-					
+
+					emit(sink, Vocab.COFINANCING_RATE_EXPLICIT.asNode(),
+							RDF.type.asNode(),
+							Vocab.CofinancingRateType.asNode());
+
 					emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(),
 							createTypedLiteralNode(rate));
 
@@ -305,8 +307,9 @@ public class Main {
 						emit(sink, commitmentNode,
 								Vocab.cofinancingRateType.asNode(),
 								res.asNode());
-						
-						emit(sink, res.asNode(), RDF.type.asNode(), Vocab.CofinancingRateType.asNode());
+
+						emit(sink, res.asNode(), RDF.type.asNode(),
+								Vocab.CofinancingRateType.asNode());
 					} else {
 						logger.error("Unknown cofinancing rate: " + cfr);
 					}
@@ -392,9 +395,14 @@ public class Main {
 				}
 
 				if (expenseType != null) {
-					emit(sink, commitmentNode, Vocab.expenseType.asNode(),
-							Vocab.ExpenseType.asNode(),
-							"http://fts.publicdata.eu/et/", expenseType);
+
+					Resource res = expenseTypeTagToResource.get(expenseType);
+					if (res != null) {
+						emit(sink, commitmentNode, Vocab.expenseType.asNode(), res.asNode());
+						emit(sink, res.asNode(), RDF.type.asNode(), Vocab.ExpenseType.asNode());
+					} else {
+						logger.error("Unknown expense type: " + expenseType);
+					}
 				}
 
 				// for (String name : names) {
@@ -480,13 +488,13 @@ public class Main {
 							Vocab.AmountOfDistribution.asNode());
 					emit(sink, da, Vocab.commitment.asNode(), commitmentNode);
 					emit(sink, da, Vocab.beneficiary.asNode(), beneficiaryNode);
-					emit(sink, da, Vocab.amount.asNode(), daValueNode);
+					emit(sink, da, Vocab.detailAmount.asNode(), daValueNode);
 				}
 
 				/*
 				 * Geographical Zone
 				 */
-				emit(sink, beneficiaryNode, Vocab.geoZone.asNode(),
+				emit(sink, beneficiaryNode, Vocab.geographicalZone.asNode(),
 						Vocab.GeoZone.asNode(), "http://fts.publicdata.eu/gz/",
 						commitment.getResponsibleDepartment());
 

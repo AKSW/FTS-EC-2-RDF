@@ -24,7 +24,7 @@ public class Vocab {
 
 	public static final Resource COFINANCING_RATE_EXPLICIT = ResourceFactory.createResource(resourceNs + "cr/explicit");
 	public static final Resource COFINANCING_RATE_MIXED = ResourceFactory.createResource(resourceNs + "cr/mixedFinancing");
-	public static final Resource COFINANCING_RATE_LUMP_SUM = ResourceFactory.createResource(resourceNs + "cr/lumpSum");
+	public static final Resource COFINANCING_RATE_LUMP_SUM_OR_FLAT = ResourceFactory.createResource(resourceNs + "cr/lumpSumOrFlat");
 	public static final Resource COFINANCING_RATE_NA = ResourceFactory.createResource(resourceNs + "cr/na");
 
 	public static final Resource EXPENSE_TYPE_OPERATIONAL = ResourceFactory.createResource(resourceNs + "et/operational");
@@ -33,7 +33,7 @@ public class Vocab {
 	
 	public static final Property actionType = createProperty("actionType");
 	public static final Property street = createProperty("street");
-	public static final Property amount = createProperty("amount");
+	public static final Property totalAmount = createProperty("totalAmount");
 	public static final Property beneficiary = createProperty("beneficiary");
 	public static final Property budgetLine = createProperty("budgetLine");
 	public static final Property city = createProperty("city");
@@ -44,7 +44,7 @@ public class Vocab {
 	public static final Property country = createProperty("country");
 	public static final Property detailAmount = createProperty("detailAmount");
 	public static final Property expenseType = createProperty("expenseType");
-	public static final Property geoZone = createProperty("geoZone");
+	public static final Property geographicalZone = createProperty("geographicalZone");
 	//public static final Property grantSubject = createProperty("grantSubject"); //-> rdfs:comment ?
 	public static final Property positionKey = createProperty("positionKey");
 	public static final Property postCode = createProperty("postCode");

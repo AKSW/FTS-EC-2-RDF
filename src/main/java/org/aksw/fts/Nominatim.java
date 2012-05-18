@@ -3,6 +3,7 @@ package org.aksw.fts;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
@@ -33,13 +34,20 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 public class Nominatim {
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(geocode("AVENUE ANDRE ROUSSIN 7, MARSEILLE, France"));
+		//System.out.println(geocode("AVENUE ANDRE ROUSSIN 7, MARSEILLE, France"));
 		//System.out.println(geocode("Leipzig"));
 		// System.out.println(candidates);
-		//process();
+
+		PrintStream out = new PrintStream("addresses.txt");
+		try {
+			process(out);
+			out.flush();
+		} finally {
+			out.close();
+		}
 	}
 
-	public static void process() throws ClassNotFoundException, SQLException {
+	public static void process(PrintStream out) throws ClassNotFoundException, SQLException {
 		QueryExecutionFactory qef = new QueryExecutionFactoryHttp(
 				"http://localhost/fts/sparql",
 				Collections.singleton("http://fts.publicdata.eu"));
@@ -48,7 +56,7 @@ public class Nominatim {
 		CacheEx cacheFrontend = new CacheExImpl(cacheBackend);
 
 		//qef = new QueryExecutionFactoryCacheEx(qef, cacheFrontend);
-		qef = new QueryExecutionFactoryPaginated(qef);
+		//qef = new QueryExecutionFactoryPaginated(qef);
 
 		String queryString = "Prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> "
 				+ "Prefix fts-o:<http://fts.publicdata.eu/ontology/> "
@@ -59,7 +67,7 @@ public class Nominatim {
 				+ "Optional { ?s fts-o:street ?street }"
 				+ "Optional { ?s fts-o:postCode ?postCode }" + "}";
 
-		System.out.println(queryString);
+		//System.out.println(queryString);
 
 		
 		Set<String> addressStrings = new HashSet<String>();
@@ -77,6 +85,7 @@ public class Nominatim {
 					*/
 			String street = "" + StringUtils.coalesce(qs.get("street"), "");
 			String city = "" + StringUtils.coalesce(qs.get("city"), "");
+			String postCode = "" + StringUtils.coalesce(qs.get("postCode"), "");
 			String country = "" + StringUtils.coalesce(qs.get("country"), "");
 
 			
@@ -84,10 +93,15 @@ public class Nominatim {
 			if(!street.isEmpty()) {
 				str += street + ", ";
 			}
-			
+
 			if(!city.isEmpty()) {
 				str += city + ", ";
 			}
+
+			/*
+			if(!postCode.isEmpty()) {
+				str += postCode + ", ";
+			}*/
 			
 			str += country;
 			
@@ -95,11 +109,10 @@ public class Nominatim {
 			
 			
 			if(addressStrings.add(str)) {
-				System.out.println(str);
+				out.println(str);
 			}
 		}
-
-		System.out.println(addressStrings.size());
+		System.out.println("Wrote " + addressStrings.size() + " addresses");
 	}
 
 	class JsonResponseItem {

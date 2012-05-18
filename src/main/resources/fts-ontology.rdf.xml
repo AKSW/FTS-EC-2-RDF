@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rdf:RDF [
-  <!ENTITY fts-ec "http://fintrans.publicdata.eu/ec/">
-  <!ENTITY fts-o  "http://fintrans.publicdata.eu/ec/ontology/">
-  <!ENTITY fts-r  "http://fintrans.publicdata.eu/ec/resource/">
-  <!ENTITY fts-ci "http://fintrans.publicdata.eu/ec/resource/ci/">
-  <!ENTITY fts-co "http://fintrans.publicdata.eu/ec/resource/co/">
-  <!ENTITY fts-su "http://fintrans.publicdata.eu/ec/resource/su/">
-  <!ENTITY fts-be "http://fintrans.publicdata.eu/ec/resource/be/">
-  <!ENTITY fts-cr "http://fintrans.publicdata.eu/ec/resource/cr/">
-  <!ENTITY fts-et "http://fintrans.publicdata.eu/ec/resource/et/">
-  <!ENTITY fts-sa "http://fintrans.publicdata.eu/ec/resource/sa/">
-  <!ENTITY fts-dg "http://fintrans.publicdata.eu/ec/resource/dg/">
-  <!ENTITY fts-at "http://fintrans.publicdata.eu/ec/resource/at/">
-  <!ENTITY fts-bu "http://fintrans.publicdata.eu/ec/resource/bu/">
-  <!ENTITY fts-ad "http://fintrans.publicdata.eu/ec/resource/ad/">
+  <!ENTITY fts-ec "http://fts.publicdata.eu/">
+  <!ENTITY fts-o  "http://fts.publicdata.eu/ontology/">
+  <!ENTITY fts-r  "http://fts.publicdata.eu/resource/">
+  <!ENTITY fts-ci "http://fts.publicdata.eu/resource/ci/">
+  <!ENTITY fts-cy "http://fts.publicdata.eu/resource/cy/">
+  <!-- <!ENTITY fts-su "http://fts.publicdata.eu/resource/su/"> -->
+  <!ENTITY fts-be "http://fts.publicdata.eu/resource/be/">
+  <!ENTITY fts-cr "http://fts.publicdata.eu/resource/cr/">
+  <!ENTITY fts-et "http://fts.publicdata.eu/resource/et/">
+  <!ENTITY fts-gz "http://fts.publicdata.eu/resource/gz/">
+  <!ENTITY fts-rd "http://fts.publicdata.eu/resource/rd/">
+  <!ENTITY fts-at "http://fts.publicdata.eu/resource/at/">
+  <!ENTITY fts-bl "http://fts.publicdata.eu/resource/bl/">
+  <!-- <!ENTITY fts-ad "http://fts.publicdata.eu/resource/ad/"> -->
 
   <!ENTITY owl "http://www.w3.org/2002/07/owl#">
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -23,32 +23,32 @@
 
   <!ENTITY shv "http://ns.aksw.org/spatialHierarchy/">
 
-  <!ENTITY dbpedia "http://dbpedia.org/resource/">
-  <!ENTITY dbpediap "http://dbpedia.org/properties/">
-  <!ENTITY dbpediao "http://dbpedia.org/ontology/">
+  <!ENTITY dbp-r "http://dbpedia.org/resource/">
+  <!ENTITY dbp-p "http://dbpedia.org/properties/">
+  <!ENTITY dbp-o "http://dbpedia.org/ontology/">
 
   <!ENTITY gno "http://www.geonames.org/ontology#">
 ]>
+<!-- xmlns:fts-su="&fts-su;" -->
+<!-- xmlns:fts-ad="&fts-ad;"  -->
 <rdf:RDF xml:base="&fts-ec;"
 
          xmlns:fts-o="&fts-o;"
          xmlns:fts-r="&fts-r;"
-         xmlns:fts-sa="&fts-sa;"
+         xmlns:fts-gz="&fts-gz;"
          xmlns:fts-ci="&fts-ci;"
-         xmlns:fts-co="&fts-co;"
-         xmlns:fts-su="&fts-su;"
+         xmlns:fts-cy="&fts-cy;"
          xmlns:fts-be="&fts-be;"
          xmlns:fts-cr="&fts-cr;"
          xmlns:fts-et="&fts-et;"
-         xmlns:fts-dg="&fts-dg;"
+         xmlns:fts-rd="&fts-rd;"
          xmlns:fts-at="&fts-at;"
-         xmlns:fts-bu="&fts-bu;"
-         xmlns:fts-ad="&fts-ad;"
+         xmlns:fts-bl="&fts-bl;"
 
-         xmlns:dbpedia="&dbpedia;"
+         xmlns:dbp-r="&dbp-r;"
          xmlns:gno="&gno;"
-         xmlns:dbpediap="&dbpediap;"
-         xmlns:dbpediao="&dbpediao;"
+         xmlns:dbp-p="&dbp-p;"
+         xmlns:dbp-o="&dbp-o;"
          xmlns:owl="&owl;"
          xmlns:shv="&shv;"
          xmlns:dc="&dc;"
@@ -86,10 +86,10 @@
 
 <!-- Classes -->
 
-<owl:Class rdf:about="&fts-o;Subvention">
-    <rdfs:label xml:lang="de">Subvention</rdfs:label>
-    <rdfs:label xml:lang="en">Subvention</rdfs:label>
-    <rdfs:label xml:lang="fr">Subvention</rdfs:label>
+<owl:Class rdf:about="&fts-o;Commitment">
+    <rdfs:label xml:lang="de">Commitment</rdfs:label>
+    <rdfs:label xml:lang="en">Commitment</rdfs:label>
+    <rdfs:label xml:lang="fr">Commitment</rdfs:label>
     <rdfs:comment xml:lang="en">It is a grant or procurement</rdfs:comment>
 </owl:Class>
 
@@ -105,13 +105,21 @@
     <rdfs:label xml:lang="fr">Type de dépense</rdfs:label>
 </owl:Class>
 
+<!-- @Deprecated in favor of Department
 <owl:Class rdf:about="&fts-o;DirectoratesGeneral">
     <rdfs:label xml:lang="de">Generaldirektion (DG)</rdfs:label>
     <rdfs:label xml:lang="en">Directorates General (DG)</rdfs:label>
     <rdfs:label xml:lang="fr">Directions générales (DG)</rdfs:label>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/about/ds_en.htm"/>
 </owl:Class>
-
+-->
+<owl:Class rdf:about="&fts-o;Department">
+    <rdfs:label xml:lang="de">Abteilung</rdfs:label>
+    <rdfs:label xml:lang="en">Department</rdfs:label>
+    <rdfs:label xml:lang="fr">Département</rdfs:label>
+    <rdfs:seeAlso rdf:resource="http://ec.europa.eu/about/ds_en.htm"/>
+</owl:Class>
+  
 <owl:Class rdf:about="&fts-o;GeographicalZone">
     <rdfs:label xml:lang="de">Geographischen Zone</rdfs:label>
     <rdfs:label xml:lang="en">Geographical zone</rdfs:label>
@@ -122,13 +130,19 @@
 
 <owl:Class rdf:about="&fts-o;CofinancingRate">
     <rdfs:label xml:lang="de">Kofinanzierungssatz</rdfs:label>
-    <rdfs:label xml:lang="en">Cofinancing Rate</rdfs:label>
+    <rdfs:label xml:lang="en">Cofinancing rate</rdfs:label>
     <rdfs:label xml:lang="fr">Taux de cofinancement</rdfs:label>
+</owl:Class>
+
+<owl:Class rdf:about="&fts-o;CofinancingRateType">
+    <rdfs:label xml:lang="de">Kofinanzierungssatz-Typ</rdfs:label>
+    <rdfs:label xml:lang="en">Cofinancing rate type</rdfs:label>
+    <rdfs:label xml:lang="fr">Type de taux de cofinancement</rdfs:label>
 </owl:Class>
 
 <owl:Class rdf:about="&fts-o;ActionType">
     <rdfs:label xml:lang="de">Aktionstyp</rdfs:label>
-    <rdfs:label xml:lang="en">Action Type</rdfs:label>
+    <rdfs:label xml:lang="en">Action type</rdfs:label>
     <rdfs:label xml:lang="fr">Type d'action</rdfs:label>
 </owl:Class>
 
@@ -144,6 +158,7 @@
     <rdfs:label xml:lang="fr">Montant par bénéficiaire</rdfs:label>
 </owl:Class>
 
+
 <!-- Annotation Properties -->
   <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
   <owl:AnnotationProperty rdf:about="&rdfs;label"/>
@@ -151,20 +166,28 @@
 
 <!-- Datatype Properties -->
 
+<!-- @deprecated in favor of positionKey
 <owl:DatatypeProperty rdf:about="&fts-o;commitmentPositionKey">
     <rdfs:label xml:lang="en">Commitment position key</rdfs:label>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range rdf:resource="&xsd;string"/>
 </owl:DatatypeProperty>
+-->
+<owl:DatatypeProperty rdf:about="&fts-o;positionKey">
+    <rdfs:label xml:lang="en">Commitment position key</rdfs:label>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+</owl:DatatypeProperty>
+
 
 <owl:DatatypeProperty rdf:about="&fts-o;subject">
     <rdfs:label xml:lang="de">Gegenstand einer Finanzhilfe oder eines Beschaffungsvertrags</rdfs:label>
     <rdfs:label xml:lang="en">Subject of a grant or procurement</rdfs:label>
-    <rdfs:label xml:lang="fr">Objet d'une subvention ou d'un marché public</rdfs:label>
+    <rdfs:label xml:lang="fr">Objet d'une Commitment ou d'un marché public</rdfs:label>
     <rdfs:comment xml:lang="en">The subject of a grant or procurement provides general information on the nature and purpose of the expenditure, when available in the system.</rdfs:comment>
     <rdfs:comment xml:lang="de">Die Angaben zum Gegenstand einer Finanzhilfe oder eines Beschaffungsvertrags beinhalten allgemeine Informationen über die Art und den Zweck der Ausgabe – sofern diese Angaben im System verfügbar sind.</rdfs:comment>
-    <rdfs:comment xml:lang="fr">L'objet d'une subvention ou d'un marché public fournit des informations générales sur la nature et l'objectif des dépenses, si celles-ci figurent dans le système.</rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:comment xml:lang="fr">L'objet d'une Commitment ou d'un marché public fournit des informations générales sur la nature et l'objectif des dépenses, si celles-ci figurent dans le système.</rdfs:comment>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range rdf:resource="&xsd;string"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#subject"/>
 </owl:DatatypeProperty>
@@ -177,7 +200,7 @@
     <rdfs:comment xml:lang="de">Wie vom Empfänger in den an die Kommission gerichteten Anträgen angegeben. Suchen Sie am besten nach der Postleitzahl und nach dem Land, um zu vermeiden, dass Ihnen Orte mit derselben Postleitzahl in anderen Ländern angezeigt werden. Wenn Sie die Postleitzahl einer Stadt bzw. einer Ortschaft nicht kennen, verwenden Sie bitte folgende Suchmaschine: http://www.upu.int/post_code/en/postcodes.html.</rdfs:comment>
     <rdfs:comment xml:lang="fr">Tel qu'indiqué par le bénéficiaire dans les documents soumis à la Commission. Afin d'éliminer les codes postaux correspondants aux pays qui ne vous intéressent pas, veuillez effectuer une recherche par code postal et par pays. Si vous ne connaissez pas le code postal d'une ville ou d'une localité veuillez utiliser svp le moteur de recherche suivant: http://www.upu.int/post_code/fr/postcodes.html. </rdfs:comment>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
-    <owl:subPropertyOf rdf:resource="&dbpediao;postalCode"/>
+    <owl:subPropertyOf rdf:resource="&dbp-o;postalCode"/>
     <owl:subPropertyOf rdf:resource="&gno;postalCode"/>
     <rdfs:range rdf:resource="&xsd;string"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#postal"/>
@@ -188,7 +211,7 @@
     <rdfs:label xml:lang="en">street</rdfs:label>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
     <rdfs:range rdf:resource="&xsd;string"/>
-    <owl:subPropertyOf rdf:resource="&dbpediap;street"/>
+    <owl:subPropertyOf rdf:resource="&dbp-p;street"/>
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="&fts-o;budgetLineName">
@@ -215,14 +238,29 @@
     <rdfs:seeAlso rdf:resource=""/>
 </owl:DatatypeProperty>
 
-<owl:DatatypeProperty rdf:about="&fts-o;totalSum">
+<!-- [2012 May 18] Renamed from totalSum to totalAmount ~Claus -->
+<owl:DatatypeProperty rdf:about="&fts-o;totalAmount">
+    <rdfs:label xml:lang="de">Gesamtbetrag</rdfs:label>
+    <rdfs:label xml:lang="en">Total amount</rdfs:label>
+    <rdfs:label xml:lang="fr">Montant totale</rdfs:label>
+    <rdfs:comment xml:lang="en">This is the amount of the budgetary commitment made in favour of the beneficiary. This is the maximum amount the beneficiary may receive, based on costs incurred. The total amount actually paid out may therefore be smaller. For further information on commitments and payments see the FAQ page on this site. </rdfs:comment>
+    <rdfs:comment xml:lang="de">Der im Haushalt als Verpflichtungsermächtigung gebundene Betrag ist der höchste Betrag, den der Empfänger unter Kostennachweis erhalten kann. Der letztendlich ausgezahlte Gesamtbetrag kann darunterliegen, wenn die tatsächlichen Kosten niedriger ausfallen als geplant. Weitere Informationen über Verpflichtungen und Zahlungen entnehmen Sie bitte der FAQ Seite. </rdfs:comment>
+    <rdfs:comment xml:lang="fr">Il s'agit du montant inscrit au budget comme "engagement" et du montant maximal que le bénéficiaire peut recevoir sus la base de coûts effectivement encourus. Le montant total réellement versé peut être inférieur si les coûts réels sont moins élevés que prévu. Plus d'infos à ce sujet à la page FAQ.</rdfs:comment>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:range rdf:resource="&xsd;float"/>
+    <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#amount"/>
+</owl:DatatypeProperty>
+
+<!-- [2012 May 18] Renamed from amount to detailAmount. Alternatively we could name it individualAmount ~Claus -->
+<owl:DatatypeProperty rdf:about="&fts-o;detailAmount">
     <rdfs:label xml:lang="de">Betrag</rdfs:label>
     <rdfs:label xml:lang="en">Amount</rdfs:label>
     <rdfs:label xml:lang="fr">Montant</rdfs:label>
     <rdfs:comment xml:lang="en">This is the amount of the budgetary commitment made in favour of the beneficiary. This is the maximum amount the beneficiary may receive, based on costs incurred. The total amount actually paid out may therefore be smaller. For further information on commitments and payments see the FAQ page on this site. </rdfs:comment>
     <rdfs:comment xml:lang="de">Der im Haushalt als Verpflichtungsermächtigung gebundene Betrag ist der höchste Betrag, den der Empfänger unter Kostennachweis erhalten kann. Der letztendlich ausgezahlte Gesamtbetrag kann darunterliegen, wenn die tatsächlichen Kosten niedriger ausfallen als geplant. Weitere Informationen über Verpflichtungen und Zahlungen entnehmen Sie bitte der FAQ Seite. </rdfs:comment>
     <rdfs:comment xml:lang="fr">Il s'agit du montant inscrit au budget comme "engagement" et du montant maximal que le bénéficiaire peut recevoir sus la base de coûts effectivement encourus. Le montant total réellement versé peut être inférieur si les coûts réels sont moins élevés que prévu. Plus d'infos à ce sujet à la page FAQ.</rdfs:comment>
-    <rdfs:range rdf:resource="&xsd;string"/>
+    <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/>
+    <rdfs:range rdf:resource="&xsd;float"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#amount"/>
 </owl:DatatypeProperty>
 
@@ -235,7 +273,7 @@
     <rdfs:comment xml:lang="en">This is the name indicated by the beneficiary in the documents submitted to the Commission. Since this is a legal name it may vary from the name known to the general public. Moreover, certain organisations are registered in different countries (for example in the case of cooperation with national subsidiaries), possibly with variations in their name, each of which is a different beneficiary in the eyes of the Commission. Searches based only on the usual name of a beneficiary may therefore yield only partial results, so you are invited to try to test different variations on the usual name. </rdfs:comment>
     <rdfs:comment xml:lang="de">Wie vom Empfänger in den an die Kommission gerichteten Anträgen angegeben. Da es sich oft um Rechtspersönlichkeiten handelt, stimmt der Name mit dem ansonsten üblichen Namen möglicherweise nicht überein. Außerdem sind einige Organisationen in verschiedenen Ländern unter verschiedenen Namen angemeldet (zum Beispiel im Falle einer Zusammenarbeit mit nationalen Tochtergesellschaften). Jede Namensvariante wird als separater Empfänger aufgeführt, daher erzielen Sie mit einer Suche nach der gebräuchlichsten Variante möglicherweise nur Teilergebnisse. Suchen Sie bitte anhand verschiedener Namensvarianten. </rdfs:comment>
     <rdfs:comment xml:lang="fr">Le nom indiqué par le bénéficiaire dans les documents soumis à la Commission. Comme il s'agit souvent d'une entité juridique, le nom peut être différent de celui couramment utilisé. En outre, certaines organisations sont enregistrées sous des noms différents selon les pays (par exemple dans le cas de la coopération avec les filiales nationales). Chaque variante sera affichée comme un bénéficiaire distinct, de sorte que les recherches portant uniquement sur la variante la plus courante peuvent aboutir à des résultats partiels. vous êtes invités à essayer de tester différentes variantes.</rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range rdf:resource="&fts-o;Beneficiary"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#beneficiary"/>
 </owl:ObjectProperty>
@@ -247,9 +285,9 @@
     <rdfs:comment xml:lang="en">This is the year in which the amount awarded to the beneficiary has been booked in the budget in the form of a committed amount. The commitment comes after the awarding decision and implies booking in the Commission budget accounts the total amount awarded, which is then paid out on the basis of a legal agreement, usually in different tranches (for more details on commitments and payments see the FAQ page on this site).</rdfs:comment>
     <rdfs:comment xml:lang="de">Jahr, in dem die dem Empfänger gewährten Mittel in der Form von Verpflichtungsermächtigungen im Haushalt gebunden werden. Die Verpflichtungsermächtigung erfolgt nach der Gewährungsentscheidung und impliziert, in den Haushaltsbüchern der Kommission den gewährten Gesamtbetrag einzutragen, der dann auf der Grundlage eines Vertrags ausgezahlt wird, gewöhnlich in verschiedenen Teilbeträgen (für weitere Informationen über Verpflichtungs und Zahlungsermächtigungen siehe die FAQ-Seite).</rdfs:comment>
     <rdfs:comment xml:lang="fr">Il s'agit de l'année pendant laquelle le montant octroyé au bénéficiaire a été inscrit au budget de la Commission comme "engagement". L'engagement suit la décision d'adjudication et implique de réserver dans les comptes du budget de la Commission le montant total octroyé, qui est alors payé sur la base d'un contrat, généralement dans différentes tranches (pour davantage de détails sur les engagements et les paiements voir la page FAQ sur ce site).</rdfs:comment>
-    <owl:subPropertyOf rdf:resource="&dbpediap;year"/>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
-    <rdfs:range  rdf:resource="&dbpedia;Year"/>
+    <owl:subPropertyOf rdf:resource="&dbp-p;year"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:range  rdf:resource="&dbp-o;Year"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#year"/>
 </owl:ObjectProperty>
 
@@ -261,7 +299,7 @@
     <rdfs:comment xml:lang="de">Länder/Gebiete werden unter den Rubriken "EU Länder" und "Andere" ausgeführt. Unter dieser letzten Kategorie befinden sich auch einige wenigen Gebiete, die zwar zur EU gehören (generell gehören sie zu Frankreich oder zu GB), die dennoch wegen der für Transaktionen gebrauchten internationalen SWIFT Code unter der Kategorie "Andere" ausgeführt werden. SWIFT Codes beziehen sich auf Adressen und unterscheiden sich deswegen von den EU-Ländern, wozu diese Gebiete (die Martinique gehört z.B. zu Frankreich) gehören.</rdfs:comment>
     <rdfs:comment xml:lang="fr">Le champ "Pays / Territoires" est divisé en pays de l'UE et "Autres". Parmi ces derniers se trouvent quelques territoires qui font en fait partie de l'UE (généralement de la Frane ou du Royaume-Uni) mais qui sont classés sous "Autres" simplement en raison du code international "SWIFT" utilisé pour les transferts financiers aux bénéficiaires, qui est lié à leur adresse et est différent de pays de l'UE dont ils font partie (par exemple la Martinique et la France).</rdfs:comment>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
-    <owl:subPropertyOf rdf:resource="&dbpediao;country"/>
+    <owl:subPropertyOf rdf:resource="&dbp-o;country"/>
     <rdfs:range  rdf:resource="&shv;Country"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#country"/>
 </owl:ObjectProperty>
@@ -271,7 +309,7 @@
     <rdfs:label xml:lang="en">City</rdfs:label>
     <rdfs:label xml:lang="fr">Ville</rdfs:label>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
-    <owl:subPropertyOf rdf:resource="&dbpediao;city"/>
+    <owl:subPropertyOf rdf:resource="&dbp-o;city"/>
     <rdfs:range  rdf:resource="&shv;City"/>
 </owl:ObjectProperty>
 
@@ -281,8 +319,8 @@
     <rdfs:label xml:lang="fr">Coordinateur</rdfs:label>
     <rdfs:comment xml:lang="en">In some cases the beneficiary is not the sole end-receiver of EU funds, but the project coordinator responsible for redistributing the funds among the participants. This is typical for research grants which are redistributed by a coordinating scientific institution to scientists and research centres working together on the same project. FTS marks the coordinator by flagging the dedicated box. </rdfs:comment>
     <rdfs:comment xml:lang="de">In einigen Fällen handelt es sich bei dem Begünstigten nicht um den alleinigen Endempfänger der EU-Mittel, sondern um einen Projektkoordinator, der für die Weiterverteilung der Mittel an die Teilnehmer verantwortlich ist. Das ist häufig bei Forschungszuschüssen der Fall, die von einer koordinierenden wissenschaftlichen Einrichtung an gemeinsam an einem Projekt arbeitende Wissenschaftler und Forschungszentren weiterverteilt werden. Das FTS kennzeichnet einen Koordinator durch die Markierung des entsprechenden Kästchens. </rdfs:comment>
-    <rdfs:comment xml:lang="fr">Dans certains cas, le bénéficiaire n'est pas le seul destinataire final des fonds de l'UE, mais bien le coordinateur de projet responsable de la redistribution des fonds entre les participants. Il s'agit là d'une situation typique pour les subventions de recherche qui sont redistribuées par un institut scientifique coordinateur aux scientifiques et centres de recherche travaillant ensemble sur un même projet. Le système FTS indique le coordinateur en cochant la case appropriée.</rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:comment xml:lang="fr">Dans certains cas, le bénéficiaire n'est pas le seul destinataire final des fonds de l'UE, mais bien le coordinateur de projet responsable de la redistribution des fonds entre les participants. Il s'agit là d'une situation typique pour les Commitments de recherche qui sont redistribuées par un institut scientifique coordinateur aux scientifiques et centres de recherche travaillant ensemble sur un même projet. Le système FTS indique le coordinateur en cochant la case appropriée.</rdfs:comment>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;Beneficiary"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#coordinator"/>
 </owl:ObjectProperty>
@@ -293,20 +331,20 @@
     <rdfs:label xml:lang="fr">Service responsable</rdfs:label>
     <rdfs:comment xml:lang="en">Grants and procurements are administered by Commission departments called "Directorates General" (DG) in charge of implementing policies and EU funded programmes. The name of the DG can help you identify a policy area. However, be aware that grants and procurements in certain areas are managed by more than one DG ( for example "research" grants which are handed out not only by DG Research but also DG Information Society, DG Enterprise, etc.) and that one DG may manage funds in more than one area. Please note that the names of departments may change over the years, as a result of internal reorganisation.</rdfs:comment>
     <rdfs:comment xml:lang="de">Finanzhilfen und öffentliche Aufträge werden von verschiedenen Dienststellen (Generaldirektionen (GD)) verwaltet, welche beauftragt sind, die Politiken und die Programme der EU zu realisieren. Der Name einer Kommissionsdienststelle deutet schon auf den jeweiligen Politikbereich. Bitte beachten Sie, dass die einen gleichen Politikbereich betreffenden Mittel von verschiedenen Dienststellen verwaltet werden können. Forschungszuschüsse können beispielsweise von der GD Forschung, von der GD Informationsgesellschaft oder der GD Unternehmen verwaltet werden. Bitte beachten Sie auch, dass eine Generaldirektion in mehr als einem Bereich Finanzhilfen gewähren kann. Die Namen der Dienststellen können sich im Zuge interner Umstrukturierungen ändern. Bitte informieren Sie sich über die aktuellen Bezeichnungen.</rdfs:comment>
-    <rdfs:comment xml:lang="fr">Les subventions et les marchés publics sont gérés par les différents services de la Commission (directions générales ou DG) ayant la responsabilité de mettre en oeuvre les politiques et les programmes financés par l'UE. Le nom de la DG peut vous aider à identifier un domaine politique. Néanmoins, il convient de noter que certains fonds portant sur le domaine politique peuvent être gérés par plus d'une DG (une subvention en faveur de la recherche peut avoir été traitée par la DG Recherche, la DG Société de l'information ou la DG Entreprises) et qu'une seule DG peut allouer des subventions dans plusieurs domaines. Les noms des services peuvent en outre changer au fil des ans, à la suite d'une réorganisation interne.</rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:comment xml:lang="fr">Les Commitments et les marchés publics sont gérés par les différents services de la Commission (directions générales ou DG) ayant la responsabilité de mettre en oeuvre les politiques et les programmes financés par l'UE. Le nom de la DG peut vous aider à identifier un domaine politique. Néanmoins, il convient de noter que certains fonds portant sur le domaine politique peuvent être gérés par plus d'une DG (une Commitment en faveur de la recherche peut avoir été traitée par la DG Recherche, la DG Société de l'information ou la DG Entreprises) et qu'une seule DG peut allouer des Commitments dans plusieurs domaines. Les noms des services peuvent en outre changer au fil des ans, à la suite d'une réorganisation interne.</rdfs:comment>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;DirectoratesGeneral"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#commission"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="&fts-o;geoZone">
+<owl:ObjectProperty rdf:about="&fts-o;geographicalZone">
     <rdfs:label xml:lang="de">Geographischen Zone</rdfs:label>
     <rdfs:label xml:lang="en">Geographical zone</rdfs:label>
     <rdfs:label xml:lang="fr">Zone géographique</rdfs:label>
     <rdfs:comment xml:lang="en">For development aid grants paid by EuropeAid, this is the location of the action financed by the grant. </rdfs:comment>
     <rdfs:comment xml:lang="de"></rdfs:comment>
     <rdfs:comment xml:lang="fr"></rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;GeographicalZone"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#geo"/>
 </owl:ObjectProperty>
@@ -318,7 +356,7 @@
     <rdfs:comment xml:lang="en">You may choose between operational expenditure and administrative expenses. Please note that administrative expenditure is only published as of the year 2009.</rdfs:comment>
     <rdfs:comment xml:lang="de"></rdfs:comment>
     <rdfs:comment xml:lang="fr"></rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;ExpenseType"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#expense"/>
 </owl:ObjectProperty>
@@ -330,7 +368,7 @@
     <rdfs:comment xml:lang="en"></rdfs:comment>
     <rdfs:comment xml:lang="de"></rdfs:comment>
     <rdfs:comment xml:lang="fr"></rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;ActionType"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#action_type"/>
 </owl:ObjectProperty>
@@ -339,25 +377,7 @@
     <rdfs:label xml:lang="de">Kofinanzierungssatz</rdfs:label>
     <rdfs:label xml:lang="en">Cofinancing Rate</rdfs:label>
     <rdfs:label xml:lang="fr">Taux de cofinancement</rdfs:label>
-    <rdfs:comment xml:lang="en">For co-financing rate, four codes are used depending on the type of co-financing:
-1. %   percentage reimbursed by the EU, i.e. the amount of the grant quoted in FTS represents x% of the total aid received by the beneficiary
-2. "Lump sum/Flat rate"   the amount of the grant quoted in FTS is a lump sum or a flat rate financed by the EU
-3. "Mixed financing"   the amount is a combination of the above: "reimbursement + lump sum" or "reimbursement + flat rate" or "reimbursement + lump sum + flat rate"
-4. "N/A"   "not applicable": for commitments where co-financing does not apply
-An empty field means information is not available. </rdfs:comment>
-    <rdfs:comment xml:lang="de">Vier Codes geben an, welche Art der Kofinanzierung zutrifft:
-1. %   Von der EU erstatteter Prozentsatz, d. h. der im Finanztransparenzsystem (FTS) genannte Betrag entspricht x % der insgesamt vom Empfänger erhaltenen Finanzhilfe.
-2. "Pauschalbetrag/Pauschalsatz"   Der im FTS genannte Betrag ist ein von der EU finanzierter Pauschalbetrag oder Pauschalsatz.
-3. "Gemischte Finanzierung"   Der Betrag setzt sich wie folgt zusammen: "Erstattung + Pauschalbetrag" oder "Erstattung + Pauschalsatz" oder "Erstattung + Pauschalbetrag + Pauschalsatz"
-4. "N/A"   "not applicable" (nicht zutreffend): Verpflichtungsermächtigungen ohne Kofinanzierung.
-Ein leeres Feld bedeutet, dass Informationen nicht verfügbar sind. </rdfs:comment>
-    <rdfs:comment xml:lang="fr">Quatre codes différents sont utilisés en fonction du type de cofinancement:
-1. %   pourcentage remboursé par l'UE: le montant de la subvention indiquée dans le système de transparence financière représente x % de l'aide totale perçue par le bénéficiaire.
-2. "Montant/taux forfaitaire"   le montant de la subvention indiquée dans le système FTS est un montant ou un taux forfaitaire financé par l'UE.
-3. "Financement mixte"   le montant est une combinaison de ce qui précède: "remboursement + montant forfaitaire" ou "remboursement + taux forfaitaire" ou encore "remboursement + montant forfaitaire + taux forfaitaire".
-4. "N/A"   "Sans objet": pour les engagements auxquels aucun cofinancement ne s'applique.
-Un champ vide signifie qu'aucune information n'est disponible. </rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#cofinancing"/>
 </rdf:Property>
 
@@ -368,53 +388,60 @@ Un champ vide signifie qu'aucune information n'est disponible. </rdfs:comment>
     <rdfs:comment xml:lang="en">The EU budget is structured around titles (two digits: TT), chapters (four digits: TT.CC), articles (six digits: TT.CC.AA) and posts (eight digits: TT.CC.AA.PP). If you know the exact budget line number, you can search by entering the 2, 4, 6 or 8 digits code (do not forget the dots!). Example: If you enter the code 01.02.04, you will see a list with all beneficiaries under the article "Prince - Information about the Economic and Monetary Union, including the Euro".</rdfs:comment>
     <rdfs:comment xml:lang="de">Der EU-Haushalt ist in Titel unterteilt (zwei Ziffern: TT), die jeweils in Kapitel (vier Ziffern: TT.KK), Artikel (sechs Ziffern: TT.KK.AA) und Posten (acht Ziffern: TT.KK.AA.PP) gegliedert sind. Wenn Sie die genaue Nummer kennen, können Sie mit Hilfe des 2-, 4-, 6- oder 8-stelligen Codes suchen (Punkte nicht vergessen!). Beispiel: Wenn Sie den Code 01.02.04. eingeben, erhalten Sie eine Liste mit allen Empfängern unter dem Artikel 'Prince - Informationen zur Wirtschafts- und Währungsunion, einschließlich zum Euro' </rdfs:comment>
     <rdfs:comment xml:lang="fr">Le budget de l'UE est subdivisé en titres (code à deux chiffres: tt), puis en chapitres (code à quatre chiffres: tt.cc), en articles (six chiffres: tt.cc.aa) et en postes (huit chiffres: tt.cc.aa.ii). Si vous connaissez le numéro exact, vous pouvez effectuer une recherche à l'aide du code à 2, 4, 6 ou 8 chiffres (séparés par des points). Exemple: en tapant 01.02.04., vous obtiendrez la liste de tous les bénéficiaires au titre de l'article budgétaire "Prince - Communication relative à l'Union économique et monétaire, y compris l'euro". </rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Subvention"/>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;Budget"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#budget"/>
 </owl:ObjectProperty>
 
+
+<!-- TODO Properties anpassen -->
 <owl:ObjectProperty rdf:about="&fts-o;distributedAmountForBeneficiary">
     <rdfs:label xml:lang="de">Betragsteil für Empfänger</rdfs:label>
     <rdfs:label xml:lang="en">distributed amount to beneficiary</rdfs:label>
-    <owl:inverseOf rdf:resource="&fts-o;distributedAmountofSubvention"/>
+    <owl:inverseOf rdf:resource="&fts-o;distributedAmountofCommitment"/>
     <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/>
     <rdfs:range  rdf:resource="&fts-o;Beneficiary"/>
     <rdfs:seeAlso rdf:resource=""/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="&fts-o;distributedAmountofSubvention">
+<owl:ObjectProperty rdf:about="&fts-o;distributedAmountOfCommitment">
     <rdfs:label xml:lang="de">Betragsanteil an Projekt</rdfs:label>
-    <rdfs:label xml:lang="en">distributed amount of project</rdfs:label>
+    <rdfs:label xml:lang="en">distributed amount of commitment</rdfs:label>
     <owl:inverseOf rdf:resource="&fts-o;distributedAmountForBeneficiary"/>
     <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/>
-    <rdfs:range  rdf:resource="&fts-o;Subvention"/>
+    <rdfs:range  rdf:resource="&fts-o;Commitment"/>
 </owl:ObjectProperty>
 
 <!-- Further Interlinks -->
 <owl:Class rdf:about="&shv;City">
-  <owl:equivalentClass rdf:resource="&dbpedia;City"/>
+  <owl:equivalentClass rdf:resource="&dbp-o;City"/>
   <owl:equivalentClass rdf:resource="&gno;P"/>
 </owl:Class>
 
 <owl:Class rdf:about="&shv;Country">
-  <owl:equivalentClass rdf:resource="&dbpedia;Country"/>
+  <owl:equivalentClass rdf:resource="&dbp-o;Country"/>
 </owl:Class>
+
+<owl:Class rdf:about="&dbp-o;Year">
+</owl:Class>
+
 
 <!-- Instances -->
 
 <!-- Instances:Years -->
-    <dbpedia:Year rdf:about="dbpedia:2007" />
-    <dbpedia:Year rdf:about="dbpedia:2008" />
-    <dbpedia:Year rdf:about="dbpedia:2009" />
+    <dbp-o:Year rdf:about="dbp-r:2007" />
+    <dbp-o:Year rdf:about="dbp-r:2008" />
+    <dbp-o:Year rdf:about="dbp-r:2009" />
+    <dbp-o:Year rdf:about="dbp-r:2010" />
 
 <!-- Instances:cofinancingRates -->
-    <fts-o:CofinancingRate rdf:about="&fts-cr;flat" >
+    <fts-o:CofinancingRate rdf:about="&fts-cr;lumpSumOrFlat" >
         <rdfs:label xml:lang="en">Lump sum/Flat rate</rdfs:label>
         <rdfs:label xml:lang="de">Pauschalbetrag/Pauschalsatz</rdfs:label>
         <rdfs:label xml:lang="fr">Montant/taux forfaitaire</rdfs:label>
         <rdfs:comment xml:lang="en">The amount of the grant quoted in FTS is a lump sum or a flat rate financed by the EU</rdfs:comment>
         <rdfs:comment xml:lang="de">Der im FTS genannte Betrag ist ein von der EU finanzierter Pauschalbetrag oder Pauschalsatz.</rdfs:comment>
-        <rdfs:comment xml:lang="fr">Le montant de la subvention indiquée dans le système FTS est un montant ou un taux forfaitaire financé par l'UE.</rdfs:comment>
+        <rdfs:comment xml:lang="fr">Le montant de la Commitment indiquée dans le système FTS est un montant ou un taux forfaitaire financé par l'UE.</rdfs:comment>
    </fts-o:CofinancingRate>
     <fts-o:CofinancingRate rdf:about="&fts-cr;mixed" >
         <rdfs:label xml:lang="en">Mixed financing</rdfs:label>
@@ -433,6 +460,3 @@ Un champ vide signifie qu'aucune information n'est disponible. </rdfs:comment>
         <rdfs:comment xml:lang="fr">"Sans objet": pour les engagements auxquels aucun cofinancement ne s'applique.</rdfs:comment>
     </fts-o:CofinancingRate>
 </rdf:RDF>
-
-
-
