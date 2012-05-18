@@ -13,12 +13,13 @@ public class Vocab {
 	public static final Resource ActionType = createClass("ActionType");
 	public static final Resource AmountOfDistribution = createClass("AmountOfDistribution");
 	public static final Resource Beneficiary = createClass("Beneficiary");
+	public static final Resource BudgetLine = createClass("BudgetLine");
 	//public static final Resource CofinancingRate = createClass("CofinancingRate");
 	public static final Resource CofinancingRateType = createClass("CofinancingRateType");
 	public static final Resource Commitment = createClass("Commitment");
 	public static final Resource Department = createClass("Department");
-	public static final Resource BudgetLine = createClass("BudgetLine");
 	public static final Resource ExpenseType = createClass("ExpenseType");
+	public static final Resource GeoZone = createClass("GeoZone");
 	public static final Resource Programme = createClass("Programme");
 
 	public static final Resource COFINANCING_RATE_EXPLICIT = ResourceFactory.createResource(resourceNs + "cr/explicit");

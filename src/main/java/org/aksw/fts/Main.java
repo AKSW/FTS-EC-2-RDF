@@ -105,6 +105,15 @@ public class Main {
 	}
 
 	public static Node emit(Sink<Triple> sink, Node subject, Node property,
+			Node clazz, String prefix, String label) {
+
+		Node node = emit(sink, subject, property, prefix, label);
+		emit(sink, node, RDF.type.asNode(), clazz);
+
+		return node;
+	}
+
+	public static Node emit(Sink<Triple> sink, Node subject, Node property,
 			String prefix, String label) {
 		if (label == null || label.isEmpty()) {
 			return null;
@@ -156,15 +165,16 @@ public class Main {
 
 		Graph graph = GraphFactory.createDefaultGraph();
 		Sink<Triple> sink = new SinkTriplesToGraph(graph);
-		
+
 		process(file, sink);
 
 		Model model = ModelFactory.createModelForGraph(graph);
-		
+
 		String sourcePath = file.getAbsolutePath();
-		String targetPath = sourcePath.substring(0, sourcePath.length() - 3) + "nt";
+		String targetPath = sourcePath.substring(0, sourcePath.length() - 3)
+				+ "nt";
 		OutputStream out = new FileOutputStream(targetPath);
-		
+
 		try {
 			model.write(out, "N-TRIPLE");
 			out.flush();
@@ -238,8 +248,14 @@ public class Main {
 					Node.createLiteral("Commitment "
 							+ commitment.getPositionKey()));
 
+			/*
+			 * emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
+			 * Node.createLiteral(commitment.getBudgetLine()));
+			 */
+
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
-					Node.createLiteral(commitment.getBudgetLine()));
+					Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/bl",
+					commitment.getBudgetLine());
 
 			if (!commitment.getGrantSubject().isEmpty()) {
 				emit(sink,
@@ -250,43 +266,47 @@ public class Main {
 			}
 
 			emit(sink, commitmentNode, Vocab.actionType.asNode(),
-					"http://fts.publicdata.eu/at/", commitment.getActiontype());
+					Vocab.ActionType.asNode(), "http://fts.publicdata.eu/at/",
+					commitment.getActiontype());
 
 			emit(sink, commitmentNode, Vocab.programme.asNode(),
 					"http://fts.publicdata.eu/pg/", commitment.getProgramme());
 			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(),
-					"http://fts.publicdata.eu/rd/",
+					Vocab.Department.asNode(), "http://fts.publicdata.eu/rd/",
 					commitment.getResponsibleDepartment());
 			emit(sink, commitmentNode, Vocab.year.asNode(),
-					"http://dbpedia.org/resource/", commitment.getYear()
-							.toString());
+					Vocab.Year.asNode(), "http://dbpedia.org/resource/",
+					commitment.getYear().toString());
 
 			/*
 			 * Cofinancing rate
 			 */
 			String cfr = commitment.getCofinancingRate();
 			if (cfr != null) {
-				if(cfr.isEmpty()) {
+				if (cfr.isEmpty()) {
 					// Skp
-				}
-				else if (cfr.endsWith("%")) {
+				} else if (cfr.endsWith("%")) {
 					BigDecimal rate = processAmount(cfr.substring(0,
 							cfr.length() - 1).trim());
 
 					emit(sink, commitmentNode,
 							Vocab.cofinancingRateType.asNode(),
 							Vocab.COFINANCING_RATE_EXPLICIT.asNode());
+					
+					emit(sink, Vocab.COFINANCING_RATE_EXPLICIT.asNode(), RDF.type.asNode(), Vocab.CofinancingRateType.asNode());
+					
 					emit(sink, commitmentNode, Vocab.cofinancingRate.asNode(),
 							createTypedLiteralNode(rate));
 
-				} 
-				else {
+				} else {
 
 					Resource res = cofinancingRateTagToResource.get(cfr);
 					if (res != null) {
 						emit(sink, commitmentNode,
 								Vocab.cofinancingRateType.asNode(),
 								res.asNode());
+						
+						emit(sink, res.asNode(), RDF.type.asNode(), Vocab.CofinancingRateType.asNode());
 					} else {
 						logger.error("Unknown cofinancing rate: " + cfr);
 					}
@@ -373,6 +393,7 @@ public class Main {
 
 				if (expenseType != null) {
 					emit(sink, commitmentNode, Vocab.expenseType.asNode(),
+							Vocab.ExpenseType.asNode(),
 							"http://fts.publicdata.eu/et/", expenseType);
 				}
 
@@ -413,7 +434,9 @@ public class Main {
 				if (!(beneficiary.getCity() == null || beneficiary.getCity()
 						.isEmpty())) {
 
-					String cityStr = StringUtils.urlEncode(beneficiary.getCity()) + "-"
+					String cityStr = StringUtils.urlEncode(beneficiary
+							.getCity())
+							+ "-"
 							+ StringUtils.urlEncode(beneficiary.getCountry());
 					cityNode = Node
 							.createURI("http://fts.publicdata.eu/resource/ci/"
@@ -459,6 +482,14 @@ public class Main {
 					emit(sink, da, Vocab.beneficiary.asNode(), beneficiaryNode);
 					emit(sink, da, Vocab.amount.asNode(), daValueNode);
 				}
+
+				/*
+				 * Geographical Zone
+				 */
+				emit(sink, beneficiaryNode, Vocab.geoZone.asNode(),
+						Vocab.GeoZone.asNode(), "http://fts.publicdata.eu/gz/",
+						commitment.getResponsibleDepartment());
+
 			}
 		}
 
