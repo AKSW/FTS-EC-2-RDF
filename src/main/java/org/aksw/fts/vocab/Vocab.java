@@ -11,7 +11,7 @@ public class Vocab {
 	public static final Resource Year = ResourceFactory.createResource("http://dbpedia.org/ontology/Year");
 	
 	public static final Resource ActionType = createClass("ActionType");
-	public static final Resource AmountOfDistribution = createClass("AmountOfDistribution");
+	public static final Resource Benefit = createClass("Benefit");
 	public static final Resource Beneficiary = createClass("Beneficiary");
 	public static final Resource BudgetLine = createClass("BudgetLine");
 	//public static final Resource CofinancingRate = createClass("CofinancingRate");
@@ -34,15 +34,24 @@ public class Vocab {
 	public static final Property actionType = createProperty("actionType");
 	public static final Property street = createProperty("street");
 	public static final Property totalAmount = createProperty("totalAmount");
+	
+	// Commitment -benefit> Benefit -beneficiary> Beneficiary
+	public static final Property benefit = createProperty("benefit");
 	public static final Property beneficiary = createProperty("beneficiary");
+	//public static final Property beneficiaryOfBenefit = createProperty("beneficiaryOfBenefit");
 	public static final Property budgetLine = createProperty("budgetLine");
+	public static final Property budgetLineName = createProperty("budgetLineName");
+	public static final Property budgetLineNumber = createProperty("budgetLineNumber");
 	public static final Property city = createProperty("city");
 	public static final Property cofinancingRate = createProperty("cofinancingRate");
 	public static final Property cofinancingRateType = createProperty("cofinancingRateType");
 	public static final Property commitment = createProperty("commitment");
+	public static final Property commitmentOfBenefit = createProperty("commitmentOfBenefit");
 	public static final Property coordinator = createProperty("coordinator");
 	public static final Property country = createProperty("country");
 	public static final Property detailAmount = createProperty("detailAmount");
+	//public static final Property detailAmount = createProperty("individualAmount");
+	//public static final Property distributedAmountOfCommitment = createProperty("distributedAmountOfCommitment");
 	public static final Property expenseType = createProperty("expenseType");
 	public static final Property geographicalZone = createProperty("geographicalZone");
 	//public static final Property grantSubject = createProperty("grantSubject"); //-> rdfs:comment ?
@@ -50,7 +59,7 @@ public class Vocab {
 	public static final Property postCode = createProperty("postCode");
 	public static final Property programme = createProperty("programme");
 	public static final Property responsibleDepartment = createProperty("responsibleDepartment");
-	public static final Property subject = createProperty("subject");
+	public static final Property grantSubject = createProperty("grantSubject");
 	public static final Property year = createProperty("year");
 	
 	public static final Property skosPrefLabel = ResourceFactory.createProperty("http://www.w3.org/2004/02/skos/core#prefLabel");

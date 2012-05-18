@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -229,7 +230,7 @@ public class Main {
 
 			trimStrings(commitment);
 
-			Node commitmentNode = Node.createURI("http://fts.publicdata.eu/ct/"
+			Node commitmentNode = Node.createURI("http://fts.publicdata.eu/cm/"
 					+ commitment.getPositionKey());
 
 			emit(sink, commitmentNode, RDF.type.asNode(),
@@ -253,14 +254,47 @@ public class Main {
 			 * Node.createLiteral(commitment.getBudgetLine()));
 			 */
 
+
+			/*
+			 * Budget Line
+			 */
+			String bl = commitment.getBudgetLine();
+			{
+				int start = bl.indexOf('(');
+				int end = start == -1 ? -1 : bl.indexOf(')', start);
+			
+				boolean isGeneratedId = false;
+				String blName;
+				String blNumber;
+				if(end == -1) {
+					blName = commitment.getBudgetLine();
+					blNumber = StringUtils.md5Hash(blName);
+					isGeneratedId = false;
+				} else {
+					blName = bl.substring(0, start).trim();
+					blNumber = bl.substring(start + 1, end);
+				}
+				
+				Node blNode = Node.createURI("http://fts.publicdata.eu/bl/" + blNumber);
+				
+				emit(sink, commitmentNode, Vocab.budgetLine.asNode(), blNode);
+				emit(sink, blNode, RDF.type.asNode(), Vocab.BudgetLine.asNode());
+				emit(sink, blNode, RDFS.label.asNode(), Node.createLiteral(blName));
+				
+				if(!isGeneratedId) {
+					emit(sink, blNode, Vocab.budgetLineNumber.asNode(), Node.createLiteral(blNumber));
+				}
+			}
+			/*
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
 					Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/bl/",
 					commitment.getBudgetLine());
+			*/
 
 			if (!commitment.getGrantSubject().isEmpty()) {
 				emit(sink,
 						commitmentNode,
-						Vocab.subject.asNode(),
+						Vocab.grantSubject.asNode(),
 						ResourceFactory.createPlainLiteral(
 								commitment.getGrantSubject()).asNode());
 			}
@@ -272,7 +306,7 @@ public class Main {
 			emit(sink, commitmentNode, Vocab.programme.asNode(),
 					"http://fts.publicdata.eu/pg/", commitment.getProgramme());
 			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(),
-					Vocab.Department.asNode(), "http://fts.publicdata.eu/rd/",
+					Vocab.Department.asNode(), "http://fts.publicdata.eu/de/",
 					commitment.getResponsibleDepartment());
 			emit(sink, commitmentNode, Vocab.year.asNode(),
 					Vocab.Year.asNode(), "http://dbpedia.org/resource/",
@@ -354,11 +388,11 @@ public class Main {
 						+ beneficiary.getCity() + " "
 						+ beneficiary.getPostCode() + " "
 						+ beneficiary.getAddress();
-				String hashPart = StringUtils.md5Hash(addressStr);
+				String addressHash = StringUtils.md5Hash(addressStr);
+				String beneficiaryPart = StringUtils.urlEncode(primaryName) + "-" + addressHash;
 				Node beneficiaryNode = Node
 						.createURI("http://fts.publicdata.eu/be/"
-								+ StringUtils.urlEncode(primaryName + "-"
-										+ hashPart));
+								+ beneficiaryPart);
 
 				emit(sink, beneficiaryNode, RDF.type.asNode(),
 						Vocab.Beneficiary.asNode());
@@ -366,8 +400,10 @@ public class Main {
 				/*
 				 * Link the beneficiary with the commitment
 				 */
+				/*
 				emit(sink, commitmentNode, Vocab.beneficiary.asNode(),
 						beneficiaryNode);
+				*/
 
 				/*
 				 * The first name of a beneficiary becomes a rdf:label and a
@@ -398,8 +434,10 @@ public class Main {
 
 					Resource res = expenseTypeTagToResource.get(expenseType);
 					if (res != null) {
-						emit(sink, commitmentNode, Vocab.expenseType.asNode(), res.asNode());
-						emit(sink, res.asNode(), RDF.type.asNode(), Vocab.ExpenseType.asNode());
+						emit(sink, commitmentNode, Vocab.expenseType.asNode(),
+								res.asNode());
+						emit(sink, res.asNode(), RDF.type.asNode(),
+								Vocab.ExpenseType.asNode());
 					} else {
 						logger.error("Unknown expense type: " + expenseType);
 					}
@@ -460,7 +498,7 @@ public class Main {
 
 				Node countryNode = emit(sink, beneficiaryNode,
 						Vocab.country.asNode(),
-						"http://fts.publicdata.eu/resource/cy/",
+						"http://fts.publicdata.eu/resource/co/",
 						beneficiary.getCountry());
 
 				emit(sink, countryNode, RDF.type.asNode(),
@@ -471,24 +509,30 @@ public class Main {
 							countryNode);
 				}
 
+
+				/*
+				 * benefit node  
+				 */
+				Node benefitNode = Node.createURI("http://fts.publicdata.eu/da/"
+						+ commitment.getPositionKey()
+						+ "-"
+						+ beneficiaryPart);
+						//+ StringUtils.md5Hash(commitmentNode.toString()
+						//		+ beneficiaryNode.toString()));
+
+				emit(sink, benefitNode, RDF.type.asNode(), Vocab.Benefit.asNode());
+				//emit(sink, benefitNode, Vocab.commitment.asNode(), commitmentNode);
+				emit(sink, commitmentNode, Vocab.benefit.asNode(), benefitNode);
+				emit(sink, benefitNode, Vocab.beneficiary.asNode(), beneficiaryNode);
+
 				/*
 				 * Detail Amount
 				 */
 				String detailAmount = beneficiary.getDetailAmount() == null ? ""
 						: beneficiary.getDetailAmount().trim();
 				if (!detailAmount.isEmpty()) {
-					Node da = Node.createURI("http://fts.publicdata.eu/da/"
-							+ commitment.getPositionKey()
-							+ "-"
-							+ StringUtils.md5Hash(commitmentNode.toString()
-									+ beneficiaryNode.toString()));
 					Node daValueNode = createTypedLiteralNode(processAmount(detailAmount));
-
-					emit(sink, da, RDF.type.asNode(),
-							Vocab.AmountOfDistribution.asNode());
-					emit(sink, da, Vocab.commitment.asNode(), commitmentNode);
-					emit(sink, da, Vocab.beneficiary.asNode(), beneficiaryNode);
-					emit(sink, da, Vocab.detailAmount.asNode(), daValueNode);
+					emit(sink, benefitNode, Vocab.detailAmount.asNode(), daValueNode);
 				}
 
 				/*

@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rdf:RDF [
   <!ENTITY fts-ec "http://fts.publicdata.eu/">
-  <!ENTITY fts-o  "http://fts.publicdata.eu/ontology/">
-  <!ENTITY fts-r  "http://fts.publicdata.eu/resource/">
-  <!ENTITY fts-ci "http://fts.publicdata.eu/resource/ci/">
-  <!ENTITY fts-cy "http://fts.publicdata.eu/resource/cy/">
-  <!-- <!ENTITY fts-su "http://fts.publicdata.eu/resource/su/"> -->
+
+  <!ENTITY fts-o "http://fts.publicdata.eu/ontology/">
+  <!ENTITY fts-r "http://fts.publicdata.eu/resource/">
+
+  <!ENTITY fts-at "http://fts.publicdata.eu/resource/at/">
   <!ENTITY fts-be "http://fts.publicdata.eu/resource/be/">
+  <!ENTITY fts-bl "http://fts.publicdata.eu/resource/bl/">
+  <!ENTITY fts-ci "http://fts.publicdata.eu/resource/ci/">
+  <!ENTITY fts-cm "http://fts.publicdata.eu/resource/cm/">
+  <!ENTITY fts-co "http://fts.publicdata.eu/resource/co/">
   <!ENTITY fts-cr "http://fts.publicdata.eu/resource/cr/">
+  <!ENTITY fts-de "http://fts.publicdata.eu/resource/de/">
   <!ENTITY fts-et "http://fts.publicdata.eu/resource/et/">
   <!ENTITY fts-gz "http://fts.publicdata.eu/resource/gz/">
-  <!ENTITY fts-rd "http://fts.publicdata.eu/resource/rd/">
-  <!ENTITY fts-at "http://fts.publicdata.eu/resource/at/">
-  <!ENTITY fts-bl "http://fts.publicdata.eu/resource/bl/">
+  <!-- <!ENTITY fts-su "http://fts.publicdata.eu/resource/su/"> -->
   <!-- <!ENTITY fts-ad "http://fts.publicdata.eu/resource/ad/"> -->
 
-  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
-  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
   <!ENTITY dc "http://purl.org/dc/terms/">
-
-  <!ENTITY shv "http://ns.aksw.org/spatialHierarchy/">
 
   <!ENTITY dbp-r "http://dbpedia.org/resource/">
   <!ENTITY dbp-p "http://dbpedia.org/properties/">
   <!ENTITY dbp-o "http://dbpedia.org/ontology/">
+
+  <!ENTITY shv "http://ns.aksw.org/spatialHierarchy/">
 
   <!ENTITY gno "http://www.geonames.org/ontology#">
 ]>
@@ -35,15 +38,17 @@
 
          xmlns:fts-o="&fts-o;"
          xmlns:fts-r="&fts-r;"
-         xmlns:fts-gz="&fts-gz;"
-         xmlns:fts-ci="&fts-ci;"
-         xmlns:fts-cy="&fts-cy;"
-         xmlns:fts-be="&fts-be;"
-         xmlns:fts-cr="&fts-cr;"
-         xmlns:fts-et="&fts-et;"
-         xmlns:fts-rd="&fts-rd;"
+
          xmlns:fts-at="&fts-at;"
+         xmlns:fts-be="&fts-be;"
          xmlns:fts-bl="&fts-bl;"
+         xmlns:fts-ci="&fts-ci;"
+         xmlns:fts-cm="&fts-cm;"
+         xmlns:fts-co="&fts-co;"
+         xmlns:fts-cr="&fts-cr;"
+         xmlns:fts-de="&fts-de;"
+         xmlns:fts-et="&fts-et;"
+         xmlns:fts-gz="&fts-gz;"
 
          xmlns:dbp-r="&dbp-r;"
          xmlns:gno="&gno;"
@@ -56,6 +61,7 @@
          xmlns:rdfs="&rdfs;">
 
 <!-- Ontology Information -->
+
   <owl:Ontology rdf:about=""
                 owl:versionInfo="0.1">
     <rdfs:comment>
@@ -82,6 +88,7 @@
     <rdfs:label>Beneficiaries of the European Commission</rdfs:label>
     <dc:creator>Michael Martin</dc:creator>
     <dc:creator>Sören Auer</dc:creator>
+    <dc:creator>Claus Stadler</dc:creator>
   </owl:Ontology>
 
 <!-- Classes -->
@@ -152,11 +159,13 @@
     <rdfs:label xml:lang="fr">Budget</rdfs:label>
 </owl:Class>
 
-<owl:Class rdf:about="&fts-o;AmountOfDistribution">
-    <rdfs:label xml:lang="de">Betrag pro Begünstigter</rdfs:label>
-    <rdfs:label xml:lang="en">Amount per beneficiary</rdfs:label>
-    <rdfs:label xml:lang="fr">Montant par bénéficiaire</rdfs:label>
-</owl:Class>
+
+<!-- @deprecated in favor of the new class Benefit
+<!-- <owl:Class rdf:about="&fts-o;AmountOfDistribution"> -->
+<!--     <rdfs:label xml:lang="de">Betrag pro Begünstigter</rdfs:label> -->
+<!--     <rdfs:label xml:lang="en">Amount per beneficiary</rdfs:label> -->
+<!--     <rdfs:label xml:lang="fr">Montant par bénéficiaire</rdfs:label> -->
+<!-- </owl:Class> -->
 
 
 <!-- Annotation Properties -->
@@ -259,13 +268,14 @@
     <rdfs:comment xml:lang="en">This is the amount of the budgetary commitment made in favour of the beneficiary. This is the maximum amount the beneficiary may receive, based on costs incurred. The total amount actually paid out may therefore be smaller. For further information on commitments and payments see the FAQ page on this site. </rdfs:comment>
     <rdfs:comment xml:lang="de">Der im Haushalt als Verpflichtungsermächtigung gebundene Betrag ist der höchste Betrag, den der Empfänger unter Kostennachweis erhalten kann. Der letztendlich ausgezahlte Gesamtbetrag kann darunterliegen, wenn die tatsächlichen Kosten niedriger ausfallen als geplant. Weitere Informationen über Verpflichtungen und Zahlungen entnehmen Sie bitte der FAQ Seite. </rdfs:comment>
     <rdfs:comment xml:lang="fr">Il s'agit du montant inscrit au budget comme "engagement" et du montant maximal que le bénéficiaire peut recevoir sus la base de coûts effectivement encourus. Le montant total réellement versé peut être inférieur si les coûts réels sont moins élevés que prévu. Plus d'infos à ce sujet à la page FAQ.</rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/>
+    <rdfs:domain rdf:resource="&fts-o;Benefit"/>
     <rdfs:range rdf:resource="&xsd;float"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#amount"/>
 </owl:DatatypeProperty>
 
 <!-- Object Properties -->
 
+<!-- [2012 May 18] Domain is now Benefit rather than Commitment ~Claus -->
 <owl:ObjectProperty rdf:about="&fts-o;beneficiary">
     <rdfs:label xml:lang="de">Empfänger</rdfs:label>
     <rdfs:label xml:lang="en">beneficiary</rdfs:label>
@@ -273,7 +283,7 @@
     <rdfs:comment xml:lang="en">This is the name indicated by the beneficiary in the documents submitted to the Commission. Since this is a legal name it may vary from the name known to the general public. Moreover, certain organisations are registered in different countries (for example in the case of cooperation with national subsidiaries), possibly with variations in their name, each of which is a different beneficiary in the eyes of the Commission. Searches based only on the usual name of a beneficiary may therefore yield only partial results, so you are invited to try to test different variations on the usual name. </rdfs:comment>
     <rdfs:comment xml:lang="de">Wie vom Empfänger in den an die Kommission gerichteten Anträgen angegeben. Da es sich oft um Rechtspersönlichkeiten handelt, stimmt der Name mit dem ansonsten üblichen Namen möglicherweise nicht überein. Außerdem sind einige Organisationen in verschiedenen Ländern unter verschiedenen Namen angemeldet (zum Beispiel im Falle einer Zusammenarbeit mit nationalen Tochtergesellschaften). Jede Namensvariante wird als separater Empfänger aufgeführt, daher erzielen Sie mit einer Suche nach der gebräuchlichsten Variante möglicherweise nur Teilergebnisse. Suchen Sie bitte anhand verschiedener Namensvarianten. </rdfs:comment>
     <rdfs:comment xml:lang="fr">Le nom indiqué par le bénéficiaire dans les documents soumis à la Commission. Comme il s'agit souvent d'une entité juridique, le nom peut être différent de celui couramment utilisé. En outre, certaines organisations sont enregistrées sous des noms différents selon les pays (par exemple dans le cas de la coopération avec les filiales nationales). Chaque variante sera affichée comme un bénéficiaire distinct, de sorte que les recherches portant uniquement sur la variante la plus courante peuvent aboutir à des résultats partiels. vous êtes invités à essayer de tester différentes variantes.</rdfs:comment>
-    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:domain rdf:resource="&fts-o;Benefit"/>
     <rdfs:range rdf:resource="&fts-o;Beneficiary"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#beneficiary"/>
 </owl:ObjectProperty>
@@ -381,7 +391,8 @@
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#cofinancing"/>
 </rdf:Property>
 
-<owl:ObjectProperty rdf:about="&fts-o;budget">
+<!-- [2012 May 18] Renamed budget to budgetLine ~Claus -->
+<owl:ObjectProperty rdf:about="&fts-o;budgetLine">
     <rdfs:label xml:lang="de">Bezeichnung oder Nummer der Haushaltslinie</rdfs:label>
     <rdfs:label xml:lang="en">Budget line name or number</rdfs:label>
     <rdfs:label xml:lang="fr">Intitulé ou numéro de la ligne budgétaire</rdfs:label>
@@ -394,23 +405,34 @@
 </owl:ObjectProperty>
 
 
-<!-- TODO Properties anpassen -->
-<owl:ObjectProperty rdf:about="&fts-o;distributedAmountForBeneficiary">
-    <rdfs:label xml:lang="de">Betragsteil für Empfänger</rdfs:label>
-    <rdfs:label xml:lang="en">distributed amount to beneficiary</rdfs:label>
-    <owl:inverseOf rdf:resource="&fts-o;distributedAmountofCommitment"/>
-    <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/>
-    <rdfs:range  rdf:resource="&fts-o;Beneficiary"/>
-    <rdfs:seeAlso rdf:resource=""/>
+<!-- [2012 May 18] New property for relating a Commitment to a Benefit ~Claus -->
+<owl:ObjectProperty rdf:about="&fts-o;benefit">
+    <rdfs:label xml:lang="de">Begünstigung</rdfs:label>
+    <rdfs:label xml:lang="en">Benefit</rdfs:label>
+    <!-- <owl:inverseOf rdf:resource="&fts-o;distributedAmountForBeneficiary"/>  -->
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:range  rdf:resource="&fts-o;Benefit"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="&fts-o;distributedAmountOfCommitment">
-    <rdfs:label xml:lang="de">Betragsanteil an Projekt</rdfs:label>
-    <rdfs:label xml:lang="en">distributed amount of commitment</rdfs:label>
-    <owl:inverseOf rdf:resource="&fts-o;distributedAmountForBeneficiary"/>
-    <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/>
-    <rdfs:range  rdf:resource="&fts-o;Commitment"/>
-</owl:ObjectProperty>
+
+<!-- [2012 May 18] Deprecated in favor of new Benefit modelling ~Claus -->
+<!-- <owl:ObjectProperty rdf:about="&fts-o;distributedAmountForBeneficiary"> -->
+<!--     <rdfs:label xml:lang="de">Betragsteil für Empfänger</rdfs:label> -->
+<!--     <rdfs:label xml:lang="en">distributed amount to beneficiary</rdfs:label> -->
+<!--     <owl:inverseOf rdf:resource="&fts-o;distributedAmountofCommitment"/> -->
+<!--     <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/> -->
+<!--     <rdfs:range  rdf:resource="&fts-o;Beneficiary"/> -->
+<!--     <rdfs:seeAlso rdf:resource=""/> -->
+<!-- </owl:ObjectProperty> -->
+
+<!-- [2012 May 18] Deprecated in favor of new Benefit modelling ~Claus -->
+<!-- <owl:ObjectProperty rdf:about="&fts-o;distributedAmountOfCommitment"> -->
+<!--     <rdfs:label xml:lang="de">Betragsanteil an Projekt</rdfs:label> -->
+<!--     <rdfs:label xml:lang="en">distributed amount of commitment</rdfs:label> -->
+<!--     <owl:inverseOf rdf:resource="&fts-o;distributedAmountForBeneficiary"/> -->
+<!--     <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/> -->
+<!--     <rdfs:range  rdf:resource="&fts-o;Commitment"/> -->
+<!-- </owl:ObjectProperty> -->
 
 <!-- Further Interlinks -->
 <owl:Class rdf:about="&shv;City">
