@@ -56,10 +56,10 @@ public class Vocab {
 	public static final Property geographicalZone = createProperty("geographicalZone");
 	//public static final Property grantSubject = createProperty("grantSubject"); //-> rdfs:comment ?
 	public static final Property positionKey = createProperty("positionKey");
-	public static final Property postCode = createProperty("postCode");
+	public static final Property postalCode = createProperty("postalCode");
 	public static final Property programme = createProperty("programme");
 	public static final Property responsibleDepartment = createProperty("responsibleDepartment");
-	public static final Property grantSubject = createProperty("grantSubject");
+	public static final Property subject = createProperty("subject");
 	public static final Property year = createProperty("year");
 	
 	public static final Property skosPrefLabel = ResourceFactory.createProperty("http://www.w3.org/2004/02/skos/core#prefLabel");

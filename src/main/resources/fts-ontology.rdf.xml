@@ -22,7 +22,7 @@
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
   <!ENTITY owl "http://www.w3.org/2002/07/owl#">
-  <!ENTITY dc "http://purl.org/dc/terms/">
+  <!ENTITY dcterms "http://purl.org/dc/terms/">
 
   <!ENTITY dbp-r "http://dbpedia.org/resource/">
   <!ENTITY dbp-p "http://dbpedia.org/properties/">
@@ -56,7 +56,7 @@
          xmlns:dbp-o="&dbp-o;"
          xmlns:owl="&owl;"
          xmlns:shv="&shv;"
-         xmlns:dc="&dc;"
+         xmlns:dcterms="&dcterms;"
          xmlns:rdf="&rdf;"
          xmlns:rdfs="&rdfs;">
 
@@ -86,9 +86,9 @@
         Michael Martin:'http://bis.informatik.uni-leipzig.de/MichaelMartin'
     </rdfs:comment>
     <rdfs:label>Beneficiaries of the European Commission</rdfs:label>
-    <dc:creator>Michael Martin</dc:creator>
-    <dc:creator>Sören Auer</dc:creator>
-    <dc:creator>Claus Stadler</dc:creator>
+    <dcterms:creator>Michael Martin</dcterms:creator>
+    <dcterms:creator>Sören Auer</dcterms:creator>
+    <dcterms:creator>Claus Stadler</dcterms:creator>
   </owl:Ontology>
 
 <!-- Classes -->
@@ -112,14 +112,10 @@
     <rdfs:label xml:lang="fr">Type de dépense</rdfs:label>
 </owl:Class>
 
-<!-- @Deprecated in favor of Department
-<owl:Class rdf:about="&fts-o;DirectoratesGeneral">
-    <rdfs:label xml:lang="de">Generaldirektion (DG)</rdfs:label>
-    <rdfs:label xml:lang="en">Directorates General (DG)</rdfs:label>
-    <rdfs:label xml:lang="fr">Directions générales (DG)</rdfs:label>
-    <rdfs:seeAlso rdf:resource="http://ec.europa.eu/about/ds_en.htm"/>
+<owl:Class rdf:about="&fts-o;Benefit">
+    <rdfs:label xml:lang="en">Benefit</rdfs:label>
 </owl:Class>
--->
+
 <owl:Class rdf:about="&fts-o;Department">
     <rdfs:label xml:lang="de">Abteilung</rdfs:label>
     <rdfs:label xml:lang="en">Department</rdfs:label>
@@ -159,15 +155,6 @@
     <rdfs:label xml:lang="fr">Budget</rdfs:label>
 </owl:Class>
 
-
-<!-- @deprecated in favor of the new class Benefit
-<!-- <owl:Class rdf:about="&fts-o;AmountOfDistribution"> -->
-<!--     <rdfs:label xml:lang="de">Betrag pro Begünstigter</rdfs:label> -->
-<!--     <rdfs:label xml:lang="en">Amount per beneficiary</rdfs:label> -->
-<!--     <rdfs:label xml:lang="fr">Montant par bénéficiaire</rdfs:label> -->
-<!-- </owl:Class> -->
-
-
 <!-- Annotation Properties -->
   <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
   <owl:AnnotationProperty rdf:about="&rdfs;label"/>
@@ -175,13 +162,6 @@
 
 <!-- Datatype Properties -->
 
-<!-- @deprecated in favor of positionKey
-<owl:DatatypeProperty rdf:about="&fts-o;commitmentPositionKey">
-    <rdfs:label xml:lang="en">Commitment position key</rdfs:label>
-    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
-    <rdfs:range rdf:resource="&xsd;string"/>
-</owl:DatatypeProperty>
--->
 <owl:DatatypeProperty rdf:about="&fts-o;positionKey">
     <rdfs:label xml:lang="en">Commitment position key</rdfs:label>
     <rdfs:domain rdf:resource="&fts-o;Commitment"/>
@@ -201,7 +181,7 @@
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#subject"/>
 </owl:DatatypeProperty>
 
-<owl:DatatypeProperty rdf:about="&fts-o;postal">
+<owl:DatatypeProperty rdf:about="&fts-o;postalCode">
     <rdfs:label xml:lang="de">Postleitzahl</rdfs:label>
     <rdfs:label xml:lang="en">Postal code</rdfs:label>
     <rdfs:label xml:lang="fr">Code postal</rdfs:label>
@@ -209,8 +189,8 @@
     <rdfs:comment xml:lang="de">Wie vom Empfänger in den an die Kommission gerichteten Anträgen angegeben. Suchen Sie am besten nach der Postleitzahl und nach dem Land, um zu vermeiden, dass Ihnen Orte mit derselben Postleitzahl in anderen Ländern angezeigt werden. Wenn Sie die Postleitzahl einer Stadt bzw. einer Ortschaft nicht kennen, verwenden Sie bitte folgende Suchmaschine: http://www.upu.int/post_code/en/postcodes.html.</rdfs:comment>
     <rdfs:comment xml:lang="fr">Tel qu'indiqué par le bénéficiaire dans les documents soumis à la Commission. Afin d'éliminer les codes postaux correspondants aux pays qui ne vous intéressent pas, veuillez effectuer une recherche par code postal et par pays. Si vous ne connaissez pas le code postal d'une ville ou d'une localité veuillez utiliser svp le moteur de recherche suivant: http://www.upu.int/post_code/fr/postcodes.html. </rdfs:comment>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
-    <owl:subPropertyOf rdf:resource="&dbp-o;postalCode"/>
-    <owl:subPropertyOf rdf:resource="&gno;postalCode"/>
+    <rdfs:subPropertyOf rdf:resource="&dbp-o;postalCode"/>
+    <rdfs:subPropertyOf rdf:resource="&gno;postalCode"/>
     <rdfs:range rdf:resource="&xsd;string"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#postal"/>
 </owl:DatatypeProperty>
@@ -220,7 +200,7 @@
     <rdfs:label xml:lang="en">street</rdfs:label>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
     <rdfs:range rdf:resource="&xsd;string"/>
-    <owl:subPropertyOf rdf:resource="&dbp-p;street"/>
+    <rdfs:subPropertyOf rdf:resource="&dbp-p;street"/>
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="&fts-o;budgetLineName">
@@ -295,7 +275,7 @@
     <rdfs:comment xml:lang="en">This is the year in which the amount awarded to the beneficiary has been booked in the budget in the form of a committed amount. The commitment comes after the awarding decision and implies booking in the Commission budget accounts the total amount awarded, which is then paid out on the basis of a legal agreement, usually in different tranches (for more details on commitments and payments see the FAQ page on this site).</rdfs:comment>
     <rdfs:comment xml:lang="de">Jahr, in dem die dem Empfänger gewährten Mittel in der Form von Verpflichtungsermächtigungen im Haushalt gebunden werden. Die Verpflichtungsermächtigung erfolgt nach der Gewährungsentscheidung und impliziert, in den Haushaltsbüchern der Kommission den gewährten Gesamtbetrag einzutragen, der dann auf der Grundlage eines Vertrags ausgezahlt wird, gewöhnlich in verschiedenen Teilbeträgen (für weitere Informationen über Verpflichtungs und Zahlungsermächtigungen siehe die FAQ-Seite).</rdfs:comment>
     <rdfs:comment xml:lang="fr">Il s'agit de l'année pendant laquelle le montant octroyé au bénéficiaire a été inscrit au budget de la Commission comme "engagement". L'engagement suit la décision d'adjudication et implique de réserver dans les comptes du budget de la Commission le montant total octroyé, qui est alors payé sur la base d'un contrat, généralement dans différentes tranches (pour davantage de détails sur les engagements et les paiements voir la page FAQ sur ce site).</rdfs:comment>
-    <owl:subPropertyOf rdf:resource="&dbp-p;year"/>
+    <rdfs:subPropertyOf rdf:resource="&dbp-p;year"/>
     <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&dbp-o;Year"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#year"/>
@@ -309,7 +289,7 @@
     <rdfs:comment xml:lang="de">Länder/Gebiete werden unter den Rubriken "EU Länder" und "Andere" ausgeführt. Unter dieser letzten Kategorie befinden sich auch einige wenigen Gebiete, die zwar zur EU gehören (generell gehören sie zu Frankreich oder zu GB), die dennoch wegen der für Transaktionen gebrauchten internationalen SWIFT Code unter der Kategorie "Andere" ausgeführt werden. SWIFT Codes beziehen sich auf Adressen und unterscheiden sich deswegen von den EU-Ländern, wozu diese Gebiete (die Martinique gehört z.B. zu Frankreich) gehören.</rdfs:comment>
     <rdfs:comment xml:lang="fr">Le champ "Pays / Territoires" est divisé en pays de l'UE et "Autres". Parmi ces derniers se trouvent quelques territoires qui font en fait partie de l'UE (généralement de la Frane ou du Royaume-Uni) mais qui sont classés sous "Autres" simplement en raison du code international "SWIFT" utilisé pour les transferts financiers aux bénéficiaires, qui est lié à leur adresse et est différent de pays de l'UE dont ils font partie (par exemple la Martinique et la France).</rdfs:comment>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
-    <owl:subPropertyOf rdf:resource="&dbp-o;country"/>
+    <rdfs:subPropertyOf rdf:resource="&dbp-o;country"/>
     <rdfs:range  rdf:resource="&shv;Country"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#country"/>
 </owl:ObjectProperty>
@@ -319,7 +299,7 @@
     <rdfs:label xml:lang="en">City</rdfs:label>
     <rdfs:label xml:lang="fr">Ville</rdfs:label>
     <rdfs:domain rdf:resource="&fts-o;Beneficiary"/>
-    <owl:subPropertyOf rdf:resource="&dbp-o;city"/>
+    <rdfs:subPropertyOf rdf:resource="&dbp-o;city"/>
     <rdfs:range  rdf:resource="&shv;City"/>
 </owl:ObjectProperty>
 
@@ -343,7 +323,7 @@
     <rdfs:comment xml:lang="de">Finanzhilfen und öffentliche Aufträge werden von verschiedenen Dienststellen (Generaldirektionen (GD)) verwaltet, welche beauftragt sind, die Politiken und die Programme der EU zu realisieren. Der Name einer Kommissionsdienststelle deutet schon auf den jeweiligen Politikbereich. Bitte beachten Sie, dass die einen gleichen Politikbereich betreffenden Mittel von verschiedenen Dienststellen verwaltet werden können. Forschungszuschüsse können beispielsweise von der GD Forschung, von der GD Informationsgesellschaft oder der GD Unternehmen verwaltet werden. Bitte beachten Sie auch, dass eine Generaldirektion in mehr als einem Bereich Finanzhilfen gewähren kann. Die Namen der Dienststellen können sich im Zuge interner Umstrukturierungen ändern. Bitte informieren Sie sich über die aktuellen Bezeichnungen.</rdfs:comment>
     <rdfs:comment xml:lang="fr">Les Commitments et les marchés publics sont gérés par les différents services de la Commission (directions générales ou DG) ayant la responsabilité de mettre en oeuvre les politiques et les programmes financés par l'UE. Le nom de la DG peut vous aider à identifier un domaine politique. Néanmoins, il convient de noter que certains fonds portant sur le domaine politique peuvent être gérés par plus d'une DG (une Commitment en faveur de la recherche peut avoir été traitée par la DG Recherche, la DG Société de l'information ou la DG Entreprises) et qu'une seule DG peut allouer des Commitments dans plusieurs domaines. Les noms des services peuvent en outre changer au fil des ans, à la suite d'une réorganisation interne.</rdfs:comment>
     <rdfs:domain rdf:resource="&fts-o;Commitment"/>
-    <rdfs:range  rdf:resource="&fts-o;DirectoratesGeneral"/>
+    <rdfs:range  rdf:resource="&fts-o;Department"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#commission"/>
 </owl:ObjectProperty>
 
@@ -388,8 +368,18 @@
     <rdfs:label xml:lang="en">Cofinancing Rate</rdfs:label>
     <rdfs:label xml:lang="fr">Taux de cofinancement</rdfs:label>
     <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:range  rdf:resource="&fts-o;CofinancingRate"/>
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#cofinancing"/>
 </rdf:Property>
+
+<rdf:Property rdf:about="&fts-o;cofinancingRateType">
+    <rdfs:label xml:lang="de">KofinanzierungsTyp</rdfs:label>
+    <rdfs:label xml:lang="en">Cofinancing Rate Type</rdfs:label>
+    <rdfs:domain rdf:resource="&fts-o;Commitment"/>
+    <rdfs:range  rdf:resource="&fts-o;CofinancingRateType"/>
+    <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#cofinancing"/>
+</rdf:Property>
+
 
 <!-- [2012 May 18] Renamed budget to budgetLine ~Claus -->
 <owl:ObjectProperty rdf:about="&fts-o;budgetLine">
@@ -404,8 +394,6 @@
     <rdfs:seeAlso rdf:resource="http://ec.europa.eu/budget/fts/index.cfm?fuseaction=help#budget"/>
 </owl:ObjectProperty>
 
-
-<!-- [2012 May 18] New property for relating a Commitment to a Benefit ~Claus -->
 <owl:ObjectProperty rdf:about="&fts-o;benefit">
     <rdfs:label xml:lang="de">Begünstigung</rdfs:label>
     <rdfs:label xml:lang="en">Benefit</rdfs:label>
@@ -413,26 +401,6 @@
     <rdfs:domain rdf:resource="&fts-o;Commitment"/>
     <rdfs:range  rdf:resource="&fts-o;Benefit"/>
 </owl:ObjectProperty>
-
-
-<!-- [2012 May 18] Deprecated in favor of new Benefit modelling ~Claus -->
-<!-- <owl:ObjectProperty rdf:about="&fts-o;distributedAmountForBeneficiary"> -->
-<!--     <rdfs:label xml:lang="de">Betragsteil für Empfänger</rdfs:label> -->
-<!--     <rdfs:label xml:lang="en">distributed amount to beneficiary</rdfs:label> -->
-<!--     <owl:inverseOf rdf:resource="&fts-o;distributedAmountofCommitment"/> -->
-<!--     <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/> -->
-<!--     <rdfs:range  rdf:resource="&fts-o;Beneficiary"/> -->
-<!--     <rdfs:seeAlso rdf:resource=""/> -->
-<!-- </owl:ObjectProperty> -->
-
-<!-- [2012 May 18] Deprecated in favor of new Benefit modelling ~Claus -->
-<!-- <owl:ObjectProperty rdf:about="&fts-o;distributedAmountOfCommitment"> -->
-<!--     <rdfs:label xml:lang="de">Betragsanteil an Projekt</rdfs:label> -->
-<!--     <rdfs:label xml:lang="en">distributed amount of commitment</rdfs:label> -->
-<!--     <owl:inverseOf rdf:resource="&fts-o;distributedAmountForBeneficiary"/> -->
-<!--     <rdfs:domain rdf:resource="&fts-o;AmountOfDistribution"/> -->
-<!--     <rdfs:range  rdf:resource="&fts-o;Commitment"/> -->
-<!-- </owl:ObjectProperty> -->
 
 <!-- Further Interlinks -->
 <owl:Class rdf:about="&shv;City">

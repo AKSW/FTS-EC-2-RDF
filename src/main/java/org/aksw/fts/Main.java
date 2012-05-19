@@ -260,7 +260,7 @@ public class Main {
 			 */
 			String bl = commitment.getBudgetLine();
 			{
-				int start = bl.indexOf('(');
+				int start = bl.lastIndexOf('(');
 				int end = start == -1 ? -1 : bl.indexOf(')', start);
 			
 				boolean isGeneratedId = false;
@@ -294,7 +294,7 @@ public class Main {
 			if (!commitment.getGrantSubject().isEmpty()) {
 				emit(sink,
 						commitmentNode,
-						Vocab.grantSubject.asNode(),
+						Vocab.subject.asNode(),
 						ResourceFactory.createPlainLiteral(
 								commitment.getGrantSubject()).asNode());
 			}
@@ -469,7 +469,7 @@ public class Main {
 
 				if (!(beneficiary.getPostCode() == null || beneficiary
 						.getPostCode().isEmpty())) {
-					emit(sink, beneficiaryNode, Vocab.postCode.asNode(),
+					emit(sink, beneficiaryNode, Vocab.postalCode.asNode(),
 							Node.createLiteral(beneficiary.getPostCode()));
 				}
 
