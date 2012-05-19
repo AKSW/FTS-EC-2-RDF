@@ -1,16 +1,21 @@
 package org.aksw.fts;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.aksw.commons.sparql.api.cache.extra.CacheCoreEx;
@@ -19,9 +24,10 @@ import org.aksw.commons.sparql.api.cache.extra.CacheEx;
 import org.aksw.commons.sparql.api.cache.extra.CacheExImpl;
 import org.aksw.commons.sparql.api.core.QueryExecutionFactory;
 import org.aksw.commons.sparql.api.http.QueryExecutionFactoryHttp;
-import org.aksw.commons.sparql.api.pagination.core.QueryExecutionFactoryPaginated;
 import org.aksw.commons.util.StreamUtils;
 import org.aksw.commons.util.strings.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,19 +38,46 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 public class Nominatim {
-
+	public static final Logger logger = LoggerFactory.getLogger(Nominatim.class);
+	
 	public static void main(String[] args) throws Exception {
-		//System.out.println(geocode("AVENUE ANDRE ROUSSIN 7, MARSEILLE, France"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("addresses.txt")));
+		
+		String line;
+		int i = 0;
+		while((line = reader.readLine()) != null) {
+			line = line.replace("\\s+", " ");
+			++i;
+
+			logger.info("Processing line " + i);
+			
+			try {
+				String json = geocode(line);
+				//List<Resource> resources = geocode(line);
+				//String resStr = Joiner.on(" ").join(resources);
+				System.out.println(line + "\t" + json);
+			} catch(Exception e) {
+				logger.error("Something went wrong", e);				
+			}
+
+			try {
+				Thread.sleep(3000);
+			} catch(Exception e) {
+				logger.warn("Sleep interrupted");
+			}
+
+		}
 		//System.out.println(geocode("Leipzig"));
 		// System.out.println(candidates);
 
+		/*
 		PrintStream out = new PrintStream("addresses.txt");
 		try {
 			process(out);
 			out.flush();
 		} finally {
 			out.close();
-		}
+		}*/
 	}
 
 	public static void process(PrintStream out) throws ClassNotFoundException, SQLException {
@@ -60,7 +93,7 @@ public class Nominatim {
 
 		String queryString = "Prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> "
 				+ "Prefix fts-o:<http://fts.publicdata.eu/ontology/> "
-				+ "Select ?country ?city ?street ?postCode {"
+				+ "Select Distinct ?country ?city ?street ?postCode {"
 				+ "?s a fts-o:Beneficiary . "
 				+ "Optional { ?s fts-o:country [rdfs:label ?country] }"
 				+ "Optional { ?s fts-o:city [rdfs:label ?city] }"
@@ -74,8 +107,11 @@ public class Nominatim {
 		
 		QueryExecution qe = qef.createQueryExecution(queryString);
 		ResultSet rs = qe.execSelect();
+		int i = 0;
 		while (rs.hasNext()) {
 			QuerySolution qs = rs.next();
+			++i;
+				
 			/*
 			String str = "" + qs.get("country")
 					//+ " " + StringUtils.coalesce(qs.get("postCode"), "")
@@ -111,6 +147,8 @@ public class Nominatim {
 			if(addressStrings.add(str)) {
 				out.println(str);
 			}
+			
+			//System.out.print("Current result set row: " + i);
 		}
 		System.out.println("Wrote " + addressStrings.size() + " addresses");
 	}
@@ -139,7 +177,7 @@ public class Nominatim {
 		}
 	}
 
-	public static Set<Resource> geocode(String queryString) throws IOException {
+	public static String geocode(String queryString) throws IOException {
 
 		String service = "http://open.mapquestapi.com/nominatim/v1/search";
 		// http://nominatim.openstreetmap.org/search
@@ -150,7 +188,7 @@ public class Nominatim {
 		URL url = new URL(uri);
 		URLConnection c = url.openConnection();
 		c.setRequestProperty("User-Agent",
-				"http://linkedgeodata.org, mailto:cstadler@informatik.uni-leipzig.de");
+				"Geocoding http://fts.publicdata.eu, mailto:cstadler@informatik.uni-leipzig.de");
 
 		InputStream ins = c.getInputStream();
 
@@ -159,6 +197,10 @@ public class Nominatim {
 
 		String json = out.toString();
 
+		return json;
+	}
+	
+	public static List<Resource> processJson(String json) {
 		Gson gson = new Gson();
 
 		Type collectionType = new TypeToken<Collection<JsonResponseItem>>() {
@@ -168,7 +210,7 @@ public class Nominatim {
 
 		// gson.fromJson(json, JsonResponseItem.class);
 
-		Set<Resource> resources = new HashSet<Resource>();
+		List<Resource> resources = new ArrayList<Resource>();
 		for (JsonResponseItem item : items) {
 			Resource resource = null;
 
