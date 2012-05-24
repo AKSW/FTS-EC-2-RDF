@@ -1,6 +1,41 @@
-Select ("2007" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2007> { ?s a ?t . } Order By ?y ?t
-Select ("2008" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2008> { ?s a ?t . } Order By ?y ?t
-Select ("2009" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2009> { ?s a ?t . } Order By ?y ?t
-Select ("2010" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010> { ?s a ?t . } Order By ?y ?t
-Select ("2010-fedf" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010-fedf> { ?s a ?t . } Order By ?y ?t
+Select ("2007" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2007> { ?s a ?t . } Order By ?y Desc(?c) ?t
+Select ("2007" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2007> { ?s a ?t . } Order By ?y Desc(?c) ?t
+Select ("2008" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2008> { ?s a ?t . } Order By ?y Desc(?c) ?t
+Select ("2009" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2009> { ?s a ?t . } Order By ?y Desc(?c) ?t
+Select ("2010" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010> { ?s a ?t . } Order By ?y Desc(?c) ?t
+Select ("2010-fedf" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010-fedf> { ?s a ?t . } Order By ?y Desc(?c) ?t
 
+Select ("2007" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2007> { ?s ?p ?o }
+Select ("2008" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2008> { ?s ?p ?o }
+Select ("2009" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2009> { ?s ?p ?o }
+Select ("2010" As ?y) ?t (Count(*) As ?c) From <http://fts.publicdata.eu/en-2010> { ?s ?p ?o }
+
+
+Select ("2007" As ?y) (Count(Distinct ?s) As ?c) From <http://fts.publicdata.eu/en-2007> { ?s ?p ?o . }
+Select ("2008" As ?y) (Count(Distinct ?s) As ?c) From <http://fts.publicdata.eu/en-2008> { ?s ?p ?o . }
+Select ("2009" As ?y) (Count(Distinct ?s) As ?c) From <http://fts.publicdata.eu/en-2009> { ?s ?p ?o . }
+Select ("2010" As ?y) (Count(Distinct ?s) As ?c) From <http://fts.publicdata.eu/en-2010> { ?s ?p ?o . }
+Select ("2010-fedf" As ?y) (Count(Distinct ?s) As ?c) From <http://fts.publicdata.eu/en-2010-fedf> { ?s ?p ?o . }
+
+
+
+Select count(*) { Graph <http://fts.publicdata.eu/en-2007> { ?s a shv:City . } Graph <http://fts.publicdata.eu/links/lgd> { ?s owl:sameAs ?x . } }
+Select count(*) { Graph <http://fts.publicdata.eu/en-2008> { ?s a shv:City . } Graph <http://fts.publicdata.eu/links/lgd> { ?s owl:sameAs ?x . } }
+Select count(*) { Graph <http://fts.publicdata.eu/en-2009> { ?s a shv:City . } Graph <http://fts.publicdata.eu/links/lgd> { ?s owl:sameAs ?x . } }
+Select count(*) { Graph <http://fts.publicdata.eu/en-2010> { ?s a shv:City . } Graph <http://fts.publicdata.eu/links/lgd> { ?s owl:sameAs ?x . } }
+Select count(*) { Graph <http://fts.publicdata.eu/en-2010-fedf> { ?s a shv:City . } Graph <http://fts.publicdata.eu/links/lgd> { ?s owl:sameAs ?x . } }
+
+
+Select (Count(*) As ?c) {
+
+  Select Distinct ?s ?p ?o
+  From <http://fts.publicdata.eu/en-2007>
+  From <http://fts.publicdata.eu/en-2008>
+  From <http://fts.publicdata.eu/en-2009>
+  From <http://fts.publicdata.eu/en-2010>
+  From <http://fts.publicdata.eu/en-2010-fedf>
+  From <http://fts.publicdata.eu/ontology>
+  {
+      ?s ?p ?o
+  }
+}

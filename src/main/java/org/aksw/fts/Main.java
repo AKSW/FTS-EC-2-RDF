@@ -10,8 +10,8 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -360,8 +360,10 @@ public class Main {
 
 			// http://fts.opendata.org/resource/cm/{position-key}/SI2.566788.1
 			String expenseType = null;
-			for (Beneficiary beneficiary : commitment.getBeneficiaries()
-					.getBeneficiary()) {
+			
+			List<Beneficiary> beneficiaries = commitment.getBeneficiaries()
+					.getBeneficiary();
+			for (Beneficiary beneficiary : beneficiaries) {
 
 				trimStrings(beneficiary);
 
@@ -391,7 +393,7 @@ public class Main {
 				String addressHash = StringUtils.md5Hash(addressStr);
 				String beneficiaryPart = StringUtils.urlEncode(primaryName) + "-" + addressHash;
 				Node beneficiaryNode = Node
-						.createURI("http://fts.publicdata.eu/be/"
+						.createURI("http://fts.publicdata.eu/by/"
 								+ beneficiaryPart);
 
 				emit(sink, beneficiaryNode, RDF.type.asNode(),
@@ -513,7 +515,7 @@ public class Main {
 				/*
 				 * benefit node  
 				 */
-				Node benefitNode = Node.createURI("http://fts.publicdata.eu/da/"
+				Node benefitNode = Node.createURI("http://fts.publicdata.eu/bt/"
 						+ commitment.getPositionKey()
 						+ "-"
 						+ beneficiaryPart);
@@ -530,9 +532,17 @@ public class Main {
 				 */
 				String detailAmount = beneficiary.getDetailAmount() == null ? ""
 						: beneficiary.getDetailAmount().trim();
+
+				if(detailAmount.isEmpty() && beneficiaries.size() == 1) {
+					detailAmount = commitment.getAmount();
+				}
+				
+				
 				if (!detailAmount.isEmpty()) {
 					Node daValueNode = createTypedLiteralNode(processAmount(detailAmount));
 					emit(sink, benefitNode, Vocab.detailAmount.asNode(), daValueNode);
+				} else {
+					logger.warn("No detail amount for commitment " + commitment.getPositionKey());
 				}
 
 				/*

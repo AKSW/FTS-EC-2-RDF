@@ -1,0 +1,2 @@
+#!/bin/bash
+cat links.raw.cardinality.txt | cut -f 1 | xargs -I@ echo @ "<http://www.w3.org/2002/07/owl#sameAs> <http://fts.publicdata.eu/reosurce/PlaceHolder> ."
