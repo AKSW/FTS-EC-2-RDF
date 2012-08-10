@@ -1,0 +1,3 @@
+"This is a dummy file","as a workaround for instanciating sparqlify templates that do not have any unbound variables"
+"Second line","hm, is there a bug that single line files are not processed? - Sigh, seems like it"
+
