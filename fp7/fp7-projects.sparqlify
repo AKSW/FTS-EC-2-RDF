@@ -11,6 +11,12 @@ Prefix fp7-r:<http://xxx.org/resource/>
 
 Prefix geo:<http://www.w3.org/2003/01/geo/wgs84_pos#>
 
+/**
+ * TODO Find some suitable ontology for funded (research?) projects
+ * Candidates:
+ *    http://vocab.ox.ac.uk/projectfunding
+ */
+
 
 Create View Template fp7geocode As
 	Construct {
@@ -18,11 +24,13 @@ Create View Template fp7geocode As
 			owl:sameAs ?lgdUri .
 
 		?lgdUri
+			rdfs:label ?cityLabel ;
 			geo:long ?long ;
 			geo:lat ?lat .
 	}
 	With
 	        ?cityUri = uri(concat("http://xxx.org/resource/city/", fn:urlEncode(?2), "/", fn:urlEncode(?1)))
+		?cityLabel = plainLiteral(?1)
 		?lgdUri = uri(concat("http://linkedgeodata.org/triplify/", ?4, ?5))
 	        ?long = typedLiteral(?6, xsd:float)
 		?lat = typedLiteral(?7, xsd:float)
@@ -38,16 +46,19 @@ Create View Template fp7coordinators As
             ?projectUri = uri(concat("http://xxx.org/resource/project/", ?1))
 
 
+// TODO Partner role can also be third-party
+
 Create View Template fp7main As
     Construct {
         ?projectUri
         	a doap:Project ;
         	fp7-o:id ?projectId ;
-        	fp7-o:acronym ?acronym ;
+        	//fp7-o:acronym ?acronym ;
+		rdfs:label ?acronym ;
         	fp7-o:call ?callUri ;
         	fp7-o:instrument ?instrumentUri ;
         	fp7-o:year ?yearUri ;
-        	fp7-o:partner ?partnerUri ;
+        	fp7-o:funding ?fundingUri ;
         	fp7-o:strategicObjective ?soUri .
 
         ?callUri
@@ -61,13 +72,22 @@ Create View Template fp7main As
         	rdfs:label ?yearLabel .
 
 		?partnerUri
+			a fp7-o:Partner ;
 			rdfs:label ?partnerLabel ;
 			fp7-o:organisationClass ?organisationClassUri ;
-			fp7-o:ecFunding ?ecFunding ;
-			
 			fp7-o:address ?addressUri ;
 			pf7-o:nutsRegion ?nutsUri .
-		
+
+		?fundingUri
+			a fp7-o:Funding ;
+			rdfs:label ?fundingLabel ;
+			fp7-o:partner ?partnerUri ;
+			fp7-o:partnerRole ?partnerRoleUri ;
+			fp7-o:amount ?amount .
+
+		?partnerRoleUri
+			rdfs:label ?partnerRoleLabel .
+
 		?organisationClassUri
 			rdfs:label ?organisationClassLabel .
 		
@@ -116,15 +136,21 @@ Create View Template fp7main As
         ?partnerId = typedLiteral(?6, xsd:int)
         
         ?partnerLabel = plainLiteral(?7)
-        
+
+	?partnerRoleUri = uri(concat("http://xxx.org/resource/role/", fn:urlEncode(?8)))
+	?partnerRoleLabel = plainLiteral(?8)
+
+	?fundingUri = uri(concat("http://xxx.org/resource/funding/", ?1, "/", ?6))
+	?fundingLabel = plainLiteral(concat("Funding of partner ", ?7, " in project ", ?2))
+        ?amount = typedLiteral(?10, xsd:decimal)
+        //?ecFunding = plainLiteral(?10)
+
+
         // TODO: We need to map the coordinator role; whats the best way to do that?
         // Probably: Grep the table for these rows, and use a separate mapping config just for this
         
         ?organisationClassUri = uri("http://xxx.org/resource/oc/" + fn:urlEncode(?9))
         ?organisationClassLabel = plainLiteral(?9)
-        
-        ?ecFunding = typedLiteral(?10, xsd:decimal)
-        //?ecFunding = plainLiteral(?10)
         
         ?addressUri = uri(concat("http://xxx.org/resource/address/", ?6))
         
@@ -152,6 +178,25 @@ Create View Template fp7main As
 
 Create View Template fp7ontology As
 	Construct {
+		/**
+		 * Classes
+		 */
+		doap:Project
+			rdfs:label "Project" .
+
+		fp7-o:Funding
+			rdfs:label "Funding" .
+
+
+		// TODO Instrument, Strategic Objective, ...
+
+
+		/**
+		 * Properties
+		 *
+		 * Note: Actually we can skip all explicit definintions where the label
+		 * equals the local name.
+		 */
 		rdf:type
 			rdfs:label "type" .
 
@@ -185,8 +230,11 @@ Create View Template fp7ontology As
 		fp7-o:country
 			rdfs:label "country" .
 
-		fp7-o:ecFunding
+		fp7-o:funding
 			rdfs:label "funding" .
+
+		fp7-o:amount
+			rdfs:label "amount" .
 
 		fp7-o:id
 			rdfs:label "id" .

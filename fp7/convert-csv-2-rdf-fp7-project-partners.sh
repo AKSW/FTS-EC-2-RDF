@@ -17,14 +17,14 @@ csvFileCoordinators='fp7-coordinators.csv.tmp'
 xls2csv "$xslFile" | tail -n +2 > "$csvFile"
 
 # Create a separate csv file for the coordinations
-cat "$csvFile" | grep '"Coordinator"' > "$csvFileCoordinators"
+#cat "$csvFile" | grep '"Coordinator"' > "$csvFileCoordinators"
 
 
 # Convert the overall table
 sparqlify-csv -c "$mappingFile" -f "$csvFile" -v "fp7main"
 
 # Conver the coordinators
-sparqlify-csv -c "$mappingFile" -f "$csvFile" -v "fp7coordinators"
+#sparqlify-csv -c "$mappingFile" -f "$csvFileCoordinators" -v "fp7coordinators"
 
 cat geocoded-tagged.csv | grep ',x\s*$' > geocoded-tagged.csv.tmp
 
