@@ -1,0 +1,38 @@
+Prefix fn:<http://aksw.org/sparqlify/> // This namespace is currently needed for urlEncode and urlDecode.
+
+Prefix doap:<http://usefulinc.com/ns/doap#>
+Prefix rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+Prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+Prefix owl:<http://www.w3.org/2002/07/owl#>
+Prefix xsd:<http://www.w3.org/2001/XMLSchema#>
+
+Prefix fp7-o:<http://fp7-pp.publicdata.eu/ontology/>
+Prefix fp7-r:<http://fp7-pp.publicdata.eu/resource/>
+
+Prefix geo:<http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+/**
+ * TODO Find some suitable ontology for funded (research?) projects
+ * Candidates:
+ *    http://vocab.ox.ac.uk/projectfunding
+ */
+
+
+Create View Template geocode As
+	Construct {
+		?cityUri
+			owl:sameAs ?lgdUri .
+
+		?lgdUri
+			rdfs:label ?cityLabel ;
+			geo:long ?long ;
+			geo:lat ?lat .
+	}
+	With
+	        ?cityUri = uri(concat("http://fts.publicdata.eu/resource/ci/", fn:urlEncode(?1), "-", fn:urlEncode(?2)))
+		?cityLabel = plainLiteral(?1) // Display name column
+		?lgdUri = uri(concat("http://linkedgeodata.org/triplify/", ?4, ?5))
+	        ?long = typedLiteral(?6, xsd:float)
+		?lat = typedLiteral(?7, xsd:float)
+
+
