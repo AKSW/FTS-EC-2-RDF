@@ -5,8 +5,13 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -26,6 +31,7 @@ import org.openjena.atlas.lib.Sink;
 import org.openjena.riot.lang.SinkTriplesToGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
@@ -37,6 +43,29 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+
+/*
+class MyStream
+	extends FilterInputStream
+/
+    public String stripNonValidXMLCharacters(String in) {
+        StringBuffer out = new StringBuffer(); // Used to hold the output.
+        char current; // Used to reference the current character.
+ 
+        if (in == null || ("".equals(in))) return ""; // vacancy test.
+        for (int i = 0; i < in.length(); i++) {
+            current = in.charAt(i); // NOTE: No IndexOutOfBoundsException caught here; it should not happen.
+            if ((current == 0x9) ||
+                (current == 0xA) ||
+                (current == 0xD) ||
+                ((current >= 0x20) && (current <= 0xD7FF)) ||
+                ((current >= 0xE000) && (current <= 0xFFFD)) ||
+                ((current >= 0x10000) && (current <= 0x10FFFF)))
+                out.append(current);
+        }
+        return out.toString();
+        */
+
 
 public class Main {
 	private static Logger logger = LoggerFactory.getLogger(Main.class);
@@ -59,10 +88,17 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		processDir(new File("data/en"));
+		
+		//process(new File("data/en/export_2011_FEDF_en.xml"));
 	}
 
 	public static void processDir(File dir) throws Exception {
 		for (File file : dir.listFiles()) {
+			if(!file.getName().endsWith(".xml")) {
+				continue;
+			}
+			
+			
 			process(file);
 		}
 	}
@@ -218,11 +254,21 @@ public class Main {
 
 	public static void process(File file, Sink<Triple> sink) throws Exception {
 
+		System.out.println("Processing " + file.getAbsolutePath());
+		
 		JAXBContext context = JAXBContext.newInstance(Fts.class.getPackage()
 				.getName());
 
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		Object result = unmarshaller.unmarshal(file);
+		
+		Reader reader = new IgnoreIllegalCharactersXmlReader(new FileInputStream(file));
+
+		//Reader reader = new InputStreamReader(inputStream,"UTF-8");
+		 
+		InputSource is = new InputSource(reader);
+		is.setEncoding("UTF-8");
+		
+		Object result = unmarshaller.unmarshal(is); //file);
 
 		Fts fts = (Fts) result;
 
@@ -230,7 +276,7 @@ public class Main {
 
 			trimStrings(commitment);
 
-			Node commitmentNode = Node.createURI("http://fts.publicdata.eu/cm/"
+			Node commitmentNode = Node.createURI("http://fts.publicdata.eu/resource/cm/"
 					+ commitment.getPositionKey());
 
 			emit(sink, commitmentNode, RDF.type.asNode(),
@@ -275,7 +321,7 @@ public class Main {
 					blNumber = bl.substring(start + 1, end);
 				}
 				
-				Node blNode = Node.createURI("http://fts.publicdata.eu/bl/" + blNumber);
+				Node blNode = Node.createURI("http://fts.publicdata.eu/resource/bl/" + blNumber);
 				
 				emit(sink, commitmentNode, Vocab.budgetLine.asNode(), blNode);
 				emit(sink, blNode, RDF.type.asNode(), Vocab.BudgetLine.asNode());
@@ -287,7 +333,7 @@ public class Main {
 			}
 			/*
 			emit(sink, commitmentNode, Vocab.budgetLine.asNode(),
-					Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/bl/",
+					Vocab.BudgetLine.asNode(), "http://fts.publicdata.eu/resource/bl/",
 					commitment.getBudgetLine());
 			*/
 
@@ -300,13 +346,13 @@ public class Main {
 			}
 
 			emit(sink, commitmentNode, Vocab.actionType.asNode(),
-					Vocab.ActionType.asNode(), "http://fts.publicdata.eu/at/",
+					Vocab.ActionType.asNode(), "http://fts.publicdata.eu/resource/at/",
 					commitment.getActiontype());
 
 			emit(sink, commitmentNode, Vocab.programme.asNode(),
-					"http://fts.publicdata.eu/pg/", commitment.getProgramme());
+					"http://fts.publicdata.eu/resource/pg/", commitment.getProgramme());
 			emit(sink, commitmentNode, Vocab.responsibleDepartment.asNode(),
-					Vocab.Department.asNode(), "http://fts.publicdata.eu/de/",
+					Vocab.Department.asNode(), "http://fts.publicdata.eu/resource/de/",
 					commitment.getResponsibleDepartment());
 			emit(sink, commitmentNode, Vocab.year.asNode(),
 					Vocab.Year.asNode(), "http://dbpedia.org/resource/",
@@ -355,7 +401,7 @@ public class Main {
 			// TODO Attach the expense type to the commitment
 			/*
 			 * emit(sink, commitmentNode, Vocab.expenseType.asNode(),
-			 * "http://fts.publicdata.eu/et/", commitment.get());
+			 * "http://fts.publicdata.eu/resource/et/", commitment.get());
 			 */
 
 			// http://fts.opendata.org/resource/cm/{position-key}/SI2.566788.1
@@ -393,7 +439,7 @@ public class Main {
 				String addressHash = StringUtils.md5Hash(addressStr);
 				String beneficiaryPart = StringUtils.urlEncode(primaryName) + "-" + addressHash;
 				Node beneficiaryNode = Node
-						.createURI("http://fts.publicdata.eu/by/"
+						.createURI("http://fts.publicdata.eu/resource/by/"
 								+ beneficiaryPart);
 
 				emit(sink, beneficiaryNode, RDF.type.asNode(),
@@ -515,7 +561,7 @@ public class Main {
 				/*
 				 * benefit node  
 				 */
-				Node benefitNode = Node.createURI("http://fts.publicdata.eu/bt/"
+				Node benefitNode = Node.createURI("http://fts.publicdata.eu/resource/bt/"
 						+ commitment.getPositionKey()
 						+ "-"
 						+ beneficiaryPart);
@@ -549,7 +595,7 @@ public class Main {
 				 * Geographical Zone
 				 */
 				emit(sink, beneficiaryNode, Vocab.geographicalZone.asNode(),
-						Vocab.GeoZone.asNode(), "http://fts.publicdata.eu/gz/",
+						Vocab.GeoZone.asNode(), "http://fts.publicdata.eu/resource/gz/",
 						commitment.getResponsibleDepartment());
 
 			}

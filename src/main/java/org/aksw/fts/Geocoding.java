@@ -71,6 +71,7 @@ public class Geocoding {
 				Thread.sleep(1000);
 			}
 		} finally {
+			reader.close();
 			out.flush();
 			out.close();
 		}

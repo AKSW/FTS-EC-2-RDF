@@ -45,27 +45,31 @@ public class Nominatim {
 		
 		String line;
 		int i = 0;
-		while((line = reader.readLine()) != null) {
-			line = line.replace("\\s+", " ");
-			++i;
-
-			logger.info("Processing line " + i);
-			
-			try {
-				String json = geocode(line);
-				//List<Resource> resources = geocode(line);
-				//String resStr = Joiner.on(" ").join(resources);
-				System.out.println(line + "\t" + json);
-			} catch(Exception e) {
-				logger.error("Something went wrong", e);				
+		try {
+			while((line = reader.readLine()) != null) {
+				line = line.replace("\\s+", " ");
+				++i;
+	
+				logger.info("Processing line " + i);
+				
+				try {
+					String json = geocode(line);
+					//List<Resource> resources = geocode(line);
+					//String resStr = Joiner.on(" ").join(resources);
+					System.out.println(line + "\t" + json);
+				} catch(Exception e) {
+					logger.error("Something went wrong", e);				
+				}
+	
+				try {
+					Thread.sleep(3000);
+				} catch(Exception e) {
+					logger.warn("Sleep interrupted");
+				}
+	
 			}
-
-			try {
-				Thread.sleep(3000);
-			} catch(Exception e) {
-				logger.warn("Sleep interrupted");
-			}
-
+		}finally {
+			reader.close();
 		}
 		//System.out.println(geocode("Leipzig"));
 		// System.out.println(candidates);
@@ -182,6 +186,8 @@ public class Nominatim {
 		String service = "http://open.mapquestapi.com/nominatim/v1/search";
 		// http://nominatim.openstreetmap.org/search
 
+
+		
 
 		String uri = service + "?format=json&q=" + StringUtils.urlEncode(queryString);
 
